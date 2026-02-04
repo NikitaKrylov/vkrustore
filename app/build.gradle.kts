@@ -56,11 +56,21 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    implementation(libs.androidx.navigation.compose)
+
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose.navigation)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.android)
+
+
+
     implementation(project(":core:common"))
-    implementation(project(":core:db"))
     implementation(project(":core:navigation"))
-    implementation(project(":core:network"))
     implementation(project(":core:storage"))
+
+    implementation(project(":data:apps"))
 
     implementation(project(":feature:account:api"))
     implementation(project(":feature:account:impl"))
@@ -79,6 +89,8 @@ dependencies {
 
     implementation(project(":feature:showcase:api"))
     implementation(project(":feature:showcase:impl"))
+
+    implementation(project(":uikit"))
 
 
 }

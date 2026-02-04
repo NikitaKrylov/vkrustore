@@ -7,8 +7,8 @@ plugins {
 
 androidConfig {
     dependencies {
-        implementation(libs.kotlinx.serialization)
-        implementation(project(":core:common"))
+        implementation(project(":feature:showcase:api"))
+        implementation(project(":feature:common"))
         implementation(project(":uikit"))
     }
 }

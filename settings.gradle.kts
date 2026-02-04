@@ -25,10 +25,12 @@ rootProject.name = "VKRuStore"
 include(":app")
 
 include(":core:common")
-include(":core:db")
 include(":core:navigation")
-include(":core:network")
 include(":core:storage")
+
+include(":data:apps")
+
+include(":feature:common")
 
 include(":feature:appDetail:api")
 include(":feature:appDetail:impl")
