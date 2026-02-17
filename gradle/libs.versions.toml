@@ -26,6 +26,7 @@ koin = "4.1.1"
 
 # Storages
 room = "2.8.4"
+datastorePreferences = "1.2.0"
 
 # Tests
 junit = "4.13.2"
@@ -84,6 +85,7 @@ ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlin
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 
 
 # Tests
