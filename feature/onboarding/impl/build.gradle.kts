@@ -9,6 +9,7 @@ androidConfig {
     dependencies {
         implementation(project(":feature:onboarding:api"))
         implementation(project(":feature:common"))
+        implementation(project(":core:storage"))
         implementation(project(":uikit"))
     }
 }
