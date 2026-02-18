@@ -68,18 +68,6 @@ internal fun Onboarding(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )
-
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .fillMaxHeight(0.2f)
-//                    .align(Alignment.BottomCenter)
-//                    .background(
-//                        Brush.verticalGradient(
-//                            colors = listOf(Color.Transparent, MaterialTheme.colorScheme.primary)
-//                        )
-//                    )
-//            )
         }
 
         Column(
