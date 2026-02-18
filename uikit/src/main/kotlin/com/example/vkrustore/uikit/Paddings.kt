@@ -29,6 +29,7 @@ val defaultCardContentPaddingValues = PaddingValues(
 val buttonPaddingValues = PaddingValues(
     start = spacing16,
     end = spacing16,
+    top = spacing16,
     bottom = spacing16
 )
 

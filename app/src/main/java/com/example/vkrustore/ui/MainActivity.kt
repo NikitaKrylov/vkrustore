@@ -11,6 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.vkrustore.core.navigation.navigateNewTask
+import com.example.vkrustore.core.storage.KeyValueStorage
+import com.example.vkrustore.core.storage.StorageKeys
+import com.example.vkrustore.core.storage.get
 import com.example.vkrustore.feature.account.api.AccountRoute
 import com.example.vkrustore.feature.account.impl.AccountScreen
 import com.example.vkrustore.feature.appDetail.api.AppDetailRoute
@@ -24,9 +28,11 @@ import com.example.vkrustore.feature.search.impl.SearchScreen
 import com.example.vkrustore.feature.showcase.api.ShowcaseRoute
 import com.example.vkrustore.feature.showcase.impl.ShowcaseScreen
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
+import org.koin.android.ext.android.inject
 
 
 class MainActivity : ComponentActivity() {
+    private val storage: KeyValueStorage by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,16 +42,17 @@ class MainActivity : ComponentActivity() {
 
             VKRuStoreTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    val isOnboarding = storage.get<Boolean>(StorageKeys.IsOnboarded) ?: true
 
                     NavHost(
                         navController = navController,
-                        startDestination = OnboardingRoute,
+                        startDestination = OnboardingRoute.takeIf { isOnboarding } ?: ShowcaseRoute,
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable<OnboardingRoute> {
                             OnboardingScreen(
                                 onFinishOnboarding = {
-                                   navController.navigate(ShowcaseRoute)
+                                    navController.navigateNewTask(ShowcaseRoute, OnboardingRoute)
                                 }
                             )
                         }
