@@ -42,8 +42,7 @@ class MainActivity : ComponentActivity() {
 
             VKRuStoreTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val isOnboarding = true
-//                    val isOnboarding = storage.get<Boolean>(StorageKeys.IsOnboarded) ?: true
+                    val isOnboarding = storage.get<Boolean>(StorageKeys.IsOnboarded) ?: true
 
                     NavHost(
                         navController = navController,
