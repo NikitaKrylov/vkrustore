@@ -32,21 +32,22 @@ import org.koin.android.ext.android.inject
 
 
 class MainActivity : ComponentActivity() {
+    private val storage: KeyValueStorage by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-            val storage: KeyValueStorage by inject()
 
             VKRuStoreTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val isOnboarding = storage.get<Boolean>(StorageKeys.IsOnboarded) ?: true
+                    val isOnboarding = true
+//                    val isOnboarding = storage.get<Boolean>(StorageKeys.IsOnboarded) ?: true
 
                     NavHost(
                         navController = navController,
-                        startDestination = if (isOnboarding) OnboardingRoute else ShowcaseRoute,
+                        startDestination = OnboardingRoute.takeIf { isOnboarding } ?: ShowcaseRoute,
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable<OnboardingRoute> {

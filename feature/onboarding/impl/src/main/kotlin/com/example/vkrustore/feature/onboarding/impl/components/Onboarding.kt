@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.HorizontalAlignmentLine
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -36,12 +37,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.vkrustore.feature.onboarding.api.OnboardingAction
 import com.example.vkrustore.uikit.R
+import com.example.vkrustore.uikit.TextStyles
+import com.example.vkrustore.uikit.buttonPaddingValues
 import com.example.vkrustore.uikit.smallShape
+import com.example.vkrustore.uikit.spacing12
 import com.example.vkrustore.uikit.spacing16
+import com.example.vkrustore.uikit.spacing24
+import com.example.vkrustore.uikit.spacing48
+import com.example.vkrustore.uikit.spacing64
+import com.example.vkrustore.uikit.spacing8
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
 
 @Composable
-fun Onboarding(
+internal fun Onboarding(
     onAction: (OnboardingAction) -> Unit
 ) {
     Column(
@@ -55,32 +63,37 @@ fun Onboarding(
                 .weight(1f)
         ) {
             Image(
-                painter = painterResource(R.drawable.app_icons),
+                painter = painterResource(R.drawable.app_icons_burst),
                 contentDescription = "App icons",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.22f)
-                    .align(Alignment.BottomCenter)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(Color.White, MaterialTheme.colorScheme.primary)
-                        )
-                    )
-            )
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .fillMaxHeight(0.2f)
+//                    .align(Alignment.BottomCenter)
+//                    .background(
+//                        Brush.verticalGradient(
+//                            colors = listOf(Color.Transparent, MaterialTheme.colorScheme.primary)
+//                        )
+//                    )
+//            )
         }
 
         Column(
             modifier = Modifier
-                .padding(horizontal = 24.dp),
+                .padding(
+                    start = spacing24,
+                    end = spacing24,
+                    bottom = spacing48
+                ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(spacing8)
             ) {
                 Icon(
                     modifier = Modifier.size(36.dp),
@@ -89,30 +102,32 @@ fun Onboarding(
                     tint = Color.Unspecified
                 )
 
-                Spacer(Modifier.width(6.dp))
-
                 Text(
                     text = "RuStore",
                     color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.W500
+                    style = TextStyles.TitleLarge
                 )
             }
 
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(spacing24))
 
-            CenterText(
+            Text(
                 text = "Официальный магазин приложений для Android",
-                fontSize = 20.sp
+                style = TextStyles.BodyLarge,
+                color = MaterialTheme.colorScheme.onPrimary,
+                textAlign = TextAlign.Center,
             )
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(spacing12))
 
-            CenterText(
+            Text(
                 text = "Любимые приложения и игры уже здесь",
+                style = TextStyles.BodyMedium,
+                color = MaterialTheme.colorScheme.onPrimary,
+                textAlign = TextAlign.Center
             )
 
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(spacing24))
 
             Button(
                 modifier = Modifier
@@ -121,50 +136,26 @@ fun Onboarding(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 ),
-                contentPadding = PaddingValues(
-                    start = spacing16,
-                    end = spacing16,
-                    top = spacing16,
-                    bottom = spacing16
-                ),
+                contentPadding = buttonPaddingValues,
                 onClick = { onAction(OnboardingAction.Finish) },
             ) {
                 Text(
                     text = "Продолжить",
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    fontSize = 16.sp
+                    style = TextStyles.LabelLarge
                 )
             }
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(spacing12))
 
-            CenterText(
+            Text(
                 text = "Нажимая «Продолжить», вы принимаете пользовательское соглашение RuStore",
-                fontSize = 12.sp,
-                lineHeight = 16.sp
+                style = TextStyles.LabelMedium,
+                color = MaterialTheme.colorScheme.onPrimary,
+                textAlign = TextAlign.Center
             )
-
-            Spacer(Modifier.height(24.dp))
         }
     }
-}
-
-@Composable
-fun CenterText(
-    text: String,
-    modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.onPrimary,
-    fontSize: TextUnit = 16.sp,
-    lineHeight: TextUnit = TextUnit.Unspecified
-) {
-    Text(
-        modifier = modifier,
-        text = text,
-        color = color,
-        fontSize = fontSize,
-        textAlign = TextAlign.Center,
-        lineHeight = lineHeight
-    )
 }
 
 @Preview
