@@ -1,5 +1,6 @@
 package com.example.vkrustore.feature.showcase.impl.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,6 +45,7 @@ import com.example.vkrustore.feature.showcase.impl.state.SearchState
 import com.example.vkrustore.feature.showcase.impl.state.ShowcaseState
 import com.example.vkrustore.uikit.R
 import com.example.vkrustore.uikit.TextStyles
+import com.example.vkrustore.uikit.components.ErrorBox
 import com.example.vkrustore.uikit.components.ExpandedAppCard
 import com.example.vkrustore.uikit.components.HorizontalAppCard
 import com.example.vkrustore.uikit.mediumShape
@@ -88,16 +90,17 @@ internal fun Showcase(
             ShowcaseState.Loading -> {
             }
 
-            is ShowcaseState.Error -> {
-            }
+            is ShowcaseState.Error ->
+                ErrorBox(
+                    title = showcaseState.message
+                )
 
-            is ShowcaseState.Show -> {
+            is ShowcaseState.Show ->
                 ShowcaseContent(
                     listState = listState,
                     blocks = showcaseState.blocks,
                     isRefreshing = showcaseState.isRefreshing
                 )
-            }
         }
     }
 }

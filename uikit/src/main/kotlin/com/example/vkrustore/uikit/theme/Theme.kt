@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val RuStoreDarkColorScheme = darkColorScheme(
-    primary = Color(0xFF0072E5),                // core-accent-blue250
+    primary = Color(0xFF2993FF),                // core-accent-blue250
     onPrimary = Color(0xFFEBF1F6),              // core-text-base90 (светлый на акцент)
     primaryContainer = Color(0xFF004BB3),       // более тёмный акцент контейнера
     onPrimaryContainer = Color(0xFFFFFFFF),
