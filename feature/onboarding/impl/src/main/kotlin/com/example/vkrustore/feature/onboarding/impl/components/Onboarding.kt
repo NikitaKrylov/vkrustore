@@ -138,7 +138,7 @@ internal fun Onboarding(
 
             Text(
                 text = "Нажимая «Продолжить», вы принимаете пользовательское соглашение RuStore",
-                style = TextStyles.LabelMedium,
+                style = TextStyles.LabelSmall,
                 color = MaterialTheme.colorScheme.onPrimary,
                 textAlign = TextAlign.Center
             )

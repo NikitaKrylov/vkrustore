@@ -3,9 +3,9 @@ package com.example.vkrustore.uikit
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 
-val boxShape = 24.dp
 val smallShape = 12.dp
 val mediumShape = 20.dp
+val boxShape = 24.dp
 val skeletonShape = 24.dp
 val buttonShape = 28.dp
 val alertShape = 28.dp

@@ -33,7 +33,7 @@ object TextStyles {
 
     val TitleLarge = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.W500,
+        fontWeight = FontWeight.Medium,
         fontSize = 26.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
@@ -41,7 +41,7 @@ object TextStyles {
 
     val TitleMedium = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.W500,
+        fontWeight = FontWeight.Normal,
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
@@ -49,7 +49,7 @@ object TextStyles {
 
     val TitleSmall = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.W500,
+        fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.sp
@@ -66,15 +66,15 @@ object TextStyles {
     val LabelMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        lineHeight = 16.sp,
+        fontSize = 14.sp,
+        lineHeight = 18.sp,
         letterSpacing = 0.5.sp
     )
 
     val LabelSmall = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
-        fontSize = 11.sp,
+        fontSize = 12.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     )

@@ -1,32 +1,38 @@
 package com.example.vkrustore.uikit.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.vkrustore.uikit.R
+import com.example.vkrustore.uikit.TextStyles
+import com.example.vkrustore.uikit.smallShape
+import com.example.vkrustore.uikit.spacing12
+import com.example.vkrustore.uikit.spacing16
+import com.example.vkrustore.uikit.spacing2
+import com.example.vkrustore.uikit.spacing4
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
 
 @Composable
@@ -36,6 +42,7 @@ fun HorizontalAppCard(
     rating: String,
     actionType: String,
     onClick: () -> Unit,
+    painter: Painter,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -43,64 +50,102 @@ fun HorizontalAppCard(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
     ) {
         Image(
-            painter = painterResource(R.drawable.love_vk),
-            contentDescription = null,
+            painter = painter,
+            contentDescription = "app icon",
             modifier = Modifier
-                .size(68.dp)
+                .size(64.dp)
         )
 
-        Spacer(Modifier.size(10.dp))
+        Spacer(Modifier.size(spacing12))
 
         Column(
             modifier = Modifier
-                .weight(1f)
+                .weight(1f),
+            verticalArrangement = Arrangement.spacedBy(spacing2)
         ) {
             Text(
-                text = "App name",
-                fontSize = 18.sp
+                text = title,
+                style = TextStyles.TitleSmall
             )
+
             Text(
-                text = "al;fjldksjf al;sdfjklajsdsadfj lkajs lkfjsalk sdfljsdlkfjslf",
+                text = description,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                fontSize = 12.sp,
-            )
-            Text(
-                text = "5+"
+                style = TextStyles.LabelSmall
             )
 
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(spacing4)
+            ) {
+                val textStyle = TextStyles.LabelLarge
+                val iconSize = with(LocalDensity.current) {
+                    textStyle.fontSize.toDp() - 4.dp
+                }
+
+                Icon(
+                    painter = painterResource(R.drawable.baseline_star_24),
+                    contentDescription = "rating icon",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .size(iconSize)
+                )
+
+                Text(
+                    text = rating,
+                    style = TextStyles.LabelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
 
-        Spacer(Modifier.size(10.dp))
+        Spacer(Modifier.size(spacing12))
 
-        Button(
-            onClick = {},
-            shape = RoundedCornerShape(20.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            modifier = Modifier
-                .height(32.dp)
-        ) {
-            Text(
-                text = "Download"
-            )
-        }
+        DownloadButton(
+            onClick = {}
+        )
+    }
+}
 
+@Composable
+fun DownloadButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        shape = RoundedCornerShape(smallShape),
+        contentPadding = PaddingValues(horizontal = spacing16),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.secondary
+        ),
+        modifier = modifier
+            .height(38.dp)
+    ) {
+        Text(
+            text = "Скачать",
+            style = TextStyles.LabelMedium
+        )
     }
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-private fun HorizontalAppCardPreview() {
-    VKRuStoreTheme {
+private fun HorizontalAppCardPreviewLight() {
+    VKRuStoreTheme(darkTheme = false) {
         HorizontalAppCard(
-            title = "title",
-            description = "description",
-            rating = "rating",
+            title = "App name",
+            description = "best app",
+            rating = "5+",
             actionType = "action type",
-            onClick = {  },
+            onClick = { },
+            painter = painterResource(R.drawable.love_vk)
         )
     }
 }
