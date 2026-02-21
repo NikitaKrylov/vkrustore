@@ -25,6 +25,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -163,36 +165,43 @@ fun ShowcaseContent(
     blocks: List<ShowcaseBlock>,
     isRefreshing: Boolean = false
 ) {
-    LazyColumn(
-        modifier = Modifier,
-        verticalArrangement = Arrangement.spacedBy(spacing8),
-        state = listState
+    PullToRefreshBox(
+        modifier = Modifier.fillMaxSize(),
+        state = rememberPullToRefreshState(),
+        isRefreshing = isRefreshing,
+        onRefresh = { }
     ) {
-        items(
-            items = blocks,
-            key = { it.id }
-        ) { block ->
-            when (block) {
-                is ShowcaseBlock.ExpandedApp ->
-                    ExpandedAppCard(
-                        modifier = Modifier
-                            .padding(horizontal = spacing16)
-                            .padding(bottom = spacing8),
-                        bannerHead = block.head,
-                        bannerSubhead = block.subhead,
-                        title = block.title,
-                        description = block.description,
-                        rating = "4,5",
-                        appAction = "action type",
-                        containerColor = Color.Cyan,
-                    )
+        LazyColumn(
+            modifier = Modifier,
+            verticalArrangement = Arrangement.spacedBy(spacing8),
+            state = listState
+        ) {
+            items(
+                items = blocks,
+                key = { it.id }
+            ) { block ->
+                when (block) {
+                    is ShowcaseBlock.ExpandedApp ->
+                        ExpandedAppCard(
+                            modifier = Modifier
+                                .padding(horizontal = spacing16)
+                                .padding(bottom = spacing8),
+                            bannerHead = block.head,
+                            bannerSubhead = block.subhead,
+                            title = block.title,
+                            description = block.description,
+                            rating = "4,5",
+                            appAction = "action type",
+                            containerColor = Color.Cyan,
+                        )
 
-                is ShowcaseBlock.AppsGroup ->
-                    VerticalAppsGroup(
-                        title = block.title,
-                        subtitle = block.subtitle,
-                        groupApp = block.apps
-                    )
+                    is ShowcaseBlock.AppsGroup ->
+                        VerticalAppsGroup(
+                            title = block.title,
+                            subtitle = block.subtitle,
+                            groupApp = block.apps
+                        )
+                }
             }
         }
     }
