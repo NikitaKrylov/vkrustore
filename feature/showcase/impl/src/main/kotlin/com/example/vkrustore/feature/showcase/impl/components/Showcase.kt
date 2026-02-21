@@ -1,7 +1,6 @@
 package com.example.vkrustore.feature.showcase.impl.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -37,6 +37,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.vkrustore.feature.common.models.AppPreview
 import com.example.vkrustore.feature.showcase.api.models.ShowcaseBlock
+import com.example.vkrustore.feature.showcase.impl.state.MainShowcaseState
+import com.example.vkrustore.feature.showcase.impl.state.SearchState
+import com.example.vkrustore.feature.showcase.impl.state.ShowcaseState
 import com.example.vkrustore.uikit.R
 import com.example.vkrustore.uikit.TextStyles
 import com.example.vkrustore.uikit.components.ExpandedAppCard
@@ -47,16 +50,17 @@ import com.example.vkrustore.uikit.spacing16
 import com.example.vkrustore.uikit.spacing2
 import com.example.vkrustore.uikit.spacing8
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
-import kotlin.collections.buildList
 import kotlin.collections.chunked
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Showcase(
-    blocks: List<ShowcaseBlock>
+internal fun Showcase(
+    state: MainShowcaseState
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val listState = rememberLazyListState()
+    val searchState = state.searchState
+    val showcaseState = state.showcaseState
 
     Column(
         modifier = Modifier
@@ -78,37 +82,19 @@ fun Showcase(
             )
         )
 
-        LazyColumn(
-            modifier = Modifier,
-            verticalArrangement = Arrangement.spacedBy(spacing8),
-            state = listState
-        ) {
-            items(
-                items = blocks,
-                key = { it.id }
-            ) { block ->
-                when (block) {
-                    is ShowcaseBlock.ExpandedApp ->
-                        ExpandedAppCard(
-                            modifier = Modifier
-                                .padding(horizontal = spacing16)
-                                .padding(bottom = spacing8),
-                            bannerHead = block.head,
-                            bannerSubhead = block.subhead,
-                            title = block.title,
-                            description = block.description,
-                            rating = "4,5",
-                            appAction = "action type",
-                            containerColor = Color.Cyan,
-                        )
+        when (showcaseState) {
+            ShowcaseState.Loading -> {
+            }
 
-                    is ShowcaseBlock.AppsGroup ->
-                        VerticalAppsGroup(
-                            title = block.title,
-                            subtitle = block.subtitle,
-                            groupApp = block.apps
-                        )
-                }
+            is ShowcaseState.Error -> {
+            }
+
+            is ShowcaseState.Show -> {
+                ShowcaseContent(
+                    listState = listState,
+                    blocks = showcaseState.blocks,
+                    isRefreshing = showcaseState.isRefreshing
+                )
             }
         }
     }
@@ -134,7 +120,7 @@ fun TopSearchBar(
                     textFieldState.edit { replace(0, length, it) }
                 },
                 onSearch = {},
-                expanded = true,
+                expanded = false,
                 onExpandedChange = {},
                 placeholder = {
                     Text(
@@ -168,6 +154,48 @@ fun TopSearchBar(
             containerColor = MaterialTheme.colorScheme.surface
         )
     )
+}
+
+
+@Composable
+fun ShowcaseContent(
+    listState: LazyListState,
+    blocks: List<ShowcaseBlock>,
+    isRefreshing: Boolean = false
+) {
+    LazyColumn(
+        modifier = Modifier,
+        verticalArrangement = Arrangement.spacedBy(spacing8),
+        state = listState
+    ) {
+        items(
+            items = blocks,
+            key = { it.id }
+        ) { block ->
+            when (block) {
+                is ShowcaseBlock.ExpandedApp ->
+                    ExpandedAppCard(
+                        modifier = Modifier
+                            .padding(horizontal = spacing16)
+                            .padding(bottom = spacing8),
+                        bannerHead = block.head,
+                        bannerSubhead = block.subhead,
+                        title = block.title,
+                        description = block.description,
+                        rating = "4,5",
+                        appAction = "action type",
+                        containerColor = Color.Cyan,
+                    )
+
+                is ShowcaseBlock.AppsGroup ->
+                    VerticalAppsGroup(
+                        title = block.title,
+                        subtitle = block.subtitle,
+                        groupApp = block.apps
+                    )
+            }
+        }
+    }
 }
 
 
@@ -285,7 +313,10 @@ private fun ShowcasePreview() {
 
     VKRuStoreTheme {
         Showcase(
-            blocks = blocks
+            state = MainShowcaseState(
+                searchState = SearchState.Empty(),
+                showcaseState = ShowcaseState.Show(blocks = blocks)
+            )
         )
     }
 }

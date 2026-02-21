@@ -4,10 +4,11 @@ import com.example.vkrustore.feature.common.models.AppPreview
 
 sealed interface ShowcaseBlock {
     val id: Long
+    val title: String
 
     data class ExpandedApp(
         override val id: Long,
-        val title: String,
+        override val title: String,
         val description: String,
         val head: String? = null,
         val subhead: String? = null
@@ -15,7 +16,7 @@ sealed interface ShowcaseBlock {
 
     data class AppsGroup(
         override val id: Long,
-        val title: String,
+        override val title: String,
         val apps: List<AppPreview>,
         val subtitle: String? = null
     ) : ShowcaseBlock

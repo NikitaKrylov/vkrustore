@@ -7,11 +7,10 @@ import com.example.vkrustore.feature.showcase.impl.components.Showcase
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ShowcaseScreen(
-) {
+fun ShowcaseScreen() {
     val viewModel: ShowcaseViewModel = koinViewModel()
 
     Showcase(
-        blocks = TODO()
+        state = TODO()
     )
 }
