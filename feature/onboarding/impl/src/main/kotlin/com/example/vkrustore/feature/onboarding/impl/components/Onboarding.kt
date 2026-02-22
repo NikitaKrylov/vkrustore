@@ -55,7 +55,7 @@ internal fun Onboarding(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary),
+            .background(Color(0xFF0072E5)),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Box(
@@ -138,7 +138,7 @@ internal fun Onboarding(
 
             Text(
                 text = "Нажимая «Продолжить», вы принимаете пользовательское соглашение RuStore",
-                style = TextStyles.LabelMedium,
+                style = TextStyles.LabelSmall,
                 color = MaterialTheme.colorScheme.onPrimary,
                 textAlign = TextAlign.Center
             )
