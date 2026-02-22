@@ -133,7 +133,7 @@ internal fun ShowcaseContent(
                             description = block.description,
                             rating = "4,5",
                             appAction = "action type",
-                            containerColor = Color.Cyan,
+                            imageUrl = ""
                         )
 
                     is ShowcaseBlock.AppsGroup ->
@@ -225,7 +225,7 @@ fun HorizontalAppsPager(
                     rating = "4,5",
                     actionType = "TODO()",
                     onClick = { },
-                    painter = painterResource(R.drawable.love_vk)
+                    imageUrl = ""
                 )
             }
         }
@@ -243,7 +243,8 @@ private fun ShowcasePreview() {
                 title = "Title app",
                 description = "best app",
                 head = "Head banner",
-                subhead = "Subhead banner"
+                subhead = "Subhead banner",
+                imageUrl = ""
             )
         } else {
             ShowcaseBlock.AppsGroup(
@@ -253,7 +254,8 @@ private fun ShowcasePreview() {
                     AppPreview(
                         id = id.toLong(),
                         title = "Title app",
-                        description = "best app"
+                        description = "best app",
+                        imageUrl = ""
                     )
                 }
             )

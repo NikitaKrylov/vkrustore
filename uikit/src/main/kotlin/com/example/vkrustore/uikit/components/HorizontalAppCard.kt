@@ -1,27 +1,33 @@
 package com.example.vkrustore.uikit.components
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.SubcomposeAsyncImage
 import com.example.vkrustore.uikit.R
 import com.example.vkrustore.uikit.TextStyles
+import com.example.vkrustore.uikit.mediumShape
 import com.example.vkrustore.uikit.spacing12
 import com.example.vkrustore.uikit.spacing2
 import com.example.vkrustore.uikit.spacing4
@@ -34,7 +40,7 @@ fun HorizontalAppCard(
     rating: String,
     actionType: String,
     onClick: () -> Unit,
-    painter: Painter,
+    imageUrl: String,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -44,11 +50,17 @@ fun HorizontalAppCard(
             .fillMaxWidth()
             .clickable(onClick = onClick)
     ) {
-        Image(
-            painter = painter,
-            contentDescription = "app icon",
+        SubcomposeAsyncImage(
             modifier = Modifier
-                .size(64.dp)
+                .size(64.dp),
+            model = imageUrl,
+            contentDescription = "app icon",
+            contentScale = ContentScale.Crop,
+            error = {
+                AppImageError(
+                    shape = RoundedCornerShape(mediumShape)
+                )
+            }
         )
 
         Spacer(Modifier.size(spacing12))
@@ -108,14 +120,14 @@ fun HorizontalAppCard(
 @Preview(showBackground = true)
 @Composable
 private fun HorizontalAppCardPreviewLight() {
-    VKRuStoreTheme(darkTheme = false) {
+    VKRuStoreTheme {
         HorizontalAppCard(
             title = "App name",
             description = "best app",
             rating = "5+",
             actionType = "action type",
             onClick = { },
-            painter = painterResource(R.drawable.love_vk)
+            imageUrl = ""
         )
     }
 }

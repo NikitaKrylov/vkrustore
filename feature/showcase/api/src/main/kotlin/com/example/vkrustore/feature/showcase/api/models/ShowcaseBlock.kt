@@ -9,6 +9,7 @@ sealed interface ShowcaseBlock {
         val id: Long,
         override val title: String,
         val description: String,
+        val imageUrl: String,
         val head: String? = null,
         val subhead: String? = null
     ) : ShowcaseBlock
