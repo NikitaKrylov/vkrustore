@@ -4,15 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,9 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.vkrustore.uikit.R
 import com.example.vkrustore.uikit.TextStyles
-import com.example.vkrustore.uikit.smallShape
 import com.example.vkrustore.uikit.spacing12
-import com.example.vkrustore.uikit.spacing16
 import com.example.vkrustore.uikit.spacing2
 import com.example.vkrustore.uikit.spacing4
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
@@ -104,7 +97,7 @@ fun HorizontalAppCard(
 
         Spacer(Modifier.size(spacing12))
 
-        AppButton(
+        SecondaryButton(
             text = "Скачать",
             onClick = {}
         )

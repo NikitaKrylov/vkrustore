@@ -119,8 +119,7 @@ internal fun ShowcaseContent(
             state = listState
         ) {
             items(
-                items = blocks,
-                key = { }
+                items = blocks
             ) { block ->
                 when (block) {
                     is ShowcaseBlock.ExpandedApp ->

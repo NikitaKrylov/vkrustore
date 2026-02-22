@@ -14,10 +14,34 @@ fun ShowcaseScreen(
 ) {
     val viewModel: ShowcaseViewModel = koinViewModel()
 
+    val blocks = List(4) { id ->
+        if (id % 2 == 0) {
+            ShowcaseBlock.ExpandedApp(
+                id = id.toLong(),
+                title = "Title app",
+                description = "best app",
+                head = "Head banner",
+                subhead = "Subhead banner"
+            )
+        } else {
+            ShowcaseBlock.AppsGroup(
+                title = "Group: $id",
+                subtitle = "Sub title",
+                apps = List(9) { id ->
+                    AppPreview(
+                        id = id.toLong(),
+                        title = "Title app",
+                        description = "best app"
+                    )
+                }
+            )
+        }
+    }
+
     Showcase(
         state = MainShowcaseState(
             searchState = SearchState(""),
-            showcaseState = ShowcaseState.Show(blocks = emptyList())
+            showcaseState = ShowcaseState.Show(blocks = blocks)
         )
     )
 }

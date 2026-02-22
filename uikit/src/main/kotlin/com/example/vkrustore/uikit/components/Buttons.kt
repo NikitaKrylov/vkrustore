@@ -4,9 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,19 +16,15 @@ import com.example.vkrustore.uikit.spacing16
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
 
 @Composable
-fun AppButton(
+fun SecondaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Button(
+    FilledTonalButton(
         onClick = onClick,
         shape = RoundedCornerShape(smallShape),
         contentPadding = PaddingValues(horizontal = spacing16),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.secondary
-        ),
         modifier = modifier
             .height(38.dp)
     ) {
@@ -45,9 +39,9 @@ fun AppButton(
 @Composable
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-fun PreviewAppButton() {
+fun PreviewSecondaryButton() {
     VKRuStoreTheme {
-        AppButton(
+        SecondaryButton(
             text = "Download",
             onClick = {}
         )

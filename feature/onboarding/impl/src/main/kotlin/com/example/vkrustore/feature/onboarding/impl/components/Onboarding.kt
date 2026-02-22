@@ -55,7 +55,7 @@ internal fun Onboarding(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary),
+            .background(Color(0xFF0072E5)),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Box(
