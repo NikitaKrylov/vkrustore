@@ -16,7 +16,7 @@ fun ShowcaseScreen(
 
     Showcase(
         state = MainShowcaseState(
-            searchState = SearchState.Empty(),
+            searchState = SearchState(""),
             showcaseState = ShowcaseState.Show(blocks = emptyList())
         )
     )

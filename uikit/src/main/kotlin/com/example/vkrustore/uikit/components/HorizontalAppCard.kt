@@ -25,7 +25,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.vkrustore.uikit.R
 import com.example.vkrustore.uikit.TextStyles
 import com.example.vkrustore.uikit.smallShape
@@ -105,31 +104,9 @@ fun HorizontalAppCard(
 
         Spacer(Modifier.size(spacing12))
 
-        DownloadButton(
-            onClick = {}
-        )
-    }
-}
-
-@Composable
-fun DownloadButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Button(
-        onClick = onClick,
-        shape = RoundedCornerShape(smallShape),
-        contentPadding = PaddingValues(horizontal = spacing16),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.secondary
-        ),
-        modifier = modifier
-            .height(38.dp)
-    ) {
-        Text(
+        AppButton(
             text = "Скачать",
-            style = TextStyles.LabelMedium
+            onClick = {}
         )
     }
 }

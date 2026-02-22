@@ -1,6 +1,5 @@
 package com.example.vkrustore.feature.showcase.impl.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,20 +14,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
-import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -37,7 +29,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.vkrustore.feature.common.models.AppPreview
 import com.example.vkrustore.feature.showcase.api.models.ShowcaseBlock
 import com.example.vkrustore.feature.showcase.impl.state.MainShowcaseState
@@ -48,18 +39,18 @@ import com.example.vkrustore.uikit.TextStyles
 import com.example.vkrustore.uikit.components.ErrorBox
 import com.example.vkrustore.uikit.components.ExpandedAppCard
 import com.example.vkrustore.uikit.components.HorizontalAppCard
-import com.example.vkrustore.uikit.mediumShape
+import com.example.vkrustore.uikit.components.TopSearchBar
 import com.example.vkrustore.uikit.spacing12
 import com.example.vkrustore.uikit.spacing16
 import com.example.vkrustore.uikit.spacing2
 import com.example.vkrustore.uikit.spacing8
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
-import kotlin.collections.chunked
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Showcase(
-    state: MainShowcaseState
+    state: MainShowcaseState,
+//    onAction: (ShowcaseAction) -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val listState = rememberLazyListState()
@@ -77,7 +68,12 @@ internal fun Showcase(
             title = {
                 TopSearchBar(
                     modifier = Modifier
-                        .padding(end = spacing16, bottom = spacing8)
+                        .padding(end = spacing16, bottom = spacing8),
+                    query = searchState.query,
+                    onSearch = {},
+                    onQueryChange = {},
+                    onLeadingClick = {},
+                    onTrailingClick = {}
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -105,65 +101,8 @@ internal fun Showcase(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopSearchBar(
-    modifier: Modifier = Modifier
-) {
-    val searchBarState = rememberSearchBarState()
-    val textFieldState = rememberTextFieldState("")
-
-    SearchBar(
-        modifier = modifier
-            .fillMaxWidth(),
-        state = searchBarState,
-        tonalElevation = 0.dp,
-        inputField = {
-            SearchBarDefaults.InputField(
-                query = textFieldState.text.toString(),
-                onQueryChange = {
-                    textFieldState.edit { replace(0, length, it) }
-                },
-                onSearch = {},
-                expanded = false,
-                onExpandedChange = {},
-                placeholder = {
-                    Text(
-                        text = "Поиск в RuStore",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = TextStyles.LabelLarge
-                    )
-                },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_search_24),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        contentDescription = "search"
-                    )
-                },
-                trailingIcon = {
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_mic_none_24),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        contentDescription = "voice search"
-                    )
-                },
-                colors = TextFieldDefaults.colors(
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedContainerColor = Color.Transparent
-                )
-            )
-        },
-        shape = RoundedCornerShape(mediumShape),
-        colors = SearchBarDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
-    )
-}
-
-
-@Composable
-fun ShowcaseContent(
+internal fun ShowcaseContent(
     listState: LazyListState,
     blocks: List<ShowcaseBlock>,
     isRefreshing: Boolean = false
@@ -181,7 +120,7 @@ fun ShowcaseContent(
         ) {
             items(
                 items = blocks,
-                key = { it.id }
+                key = { }
             ) { block ->
                 when (block) {
                     is ShowcaseBlock.ExpandedApp ->
@@ -309,7 +248,6 @@ private fun ShowcasePreview() {
             )
         } else {
             ShowcaseBlock.AppsGroup(
-                id = id.toLong(),
                 title = "Group: $id",
                 subtitle = "Sub title",
                 apps = List(9) { id ->
@@ -326,7 +264,7 @@ private fun ShowcasePreview() {
     VKRuStoreTheme {
         Showcase(
             state = MainShowcaseState(
-                searchState = SearchState.Empty(),
+                searchState = SearchState(""),
                 showcaseState = ShowcaseState.Show(blocks = blocks)
             )
         )
