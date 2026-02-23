@@ -125,7 +125,7 @@ internal fun Onboarding(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 ),
                 contentPadding = buttonPaddingValues,
-                onClick = { onAction(OnboardingAction.Finish) },
+                onClick = { onAction(OnboardingAction.Next) },
             ) {
                 Text(
                     text = "Продолжить",

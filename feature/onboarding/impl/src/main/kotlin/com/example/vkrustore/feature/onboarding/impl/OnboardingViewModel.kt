@@ -9,6 +9,7 @@ import com.example.vkrustore.feature.onboarding.api.OnboardingSideEffect
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 
 internal class OnboardingViewModel(
     private val storage: KeyValueStorage
@@ -19,13 +20,17 @@ internal class OnboardingViewModel(
     fun processAction(action: OnboardingAction) {
         when (action) {
             OnboardingAction.Finish -> finishOnboarding()
+            OnboardingAction.Next -> requestPermission()
         }
     }
 
-    private fun finishOnboarding() {
-        viewModelScope.launch {
-            storage.put(StorageKeys.IsOnboarded, false)
-            mutableSideEffect.emit(OnboardingSideEffect.FinishOnboarding)
-        }
+    private fun requestPermission() = viewModelScope.launch {
+        mutableSideEffect.emit(OnboardingSideEffect.RequestPermission)
+    }
+
+    private fun finishOnboarding() = viewModelScope.launch {
+        storage.put(StorageKeys.IsOnboarded, false)
+        mutableSideEffect.emit(OnboardingSideEffect.FinishOnboarding)
+
     }
 }
