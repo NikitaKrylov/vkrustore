@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    namespace = "com.weater.vkrustore"
+    namespace = "com.example.vkrustore"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.weater.vkrustore"
+        applicationId = "com.example.vkrustore"
         minSdk = 30
         targetSdk = 36
         versionCode = 1
@@ -91,6 +91,4 @@ dependencies {
     implementation(project(":feature:showcase:impl"))
 
     implementation(project(":uikit"))
-
-
 }

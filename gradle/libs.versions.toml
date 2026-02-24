@@ -42,6 +42,7 @@ ksp = "2.2.21-2.0.4"
 
 nav3Core = "1.0.0"
 lifecycleViewmodelNav3 = "2.10.0"
+workRuntimeKtx = "2.11.1"
 
 [libraries]
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
@@ -103,7 +104,10 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 # Plugins for composite build
 gradleplugin-android = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 gradleplugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
 
+
+koin-androidx-workmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager", version.ref = "koin" }
 
 
 [plugins]
