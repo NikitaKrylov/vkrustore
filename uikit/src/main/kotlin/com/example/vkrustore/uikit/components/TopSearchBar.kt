@@ -1,5 +1,6 @@
 package com.example.vkrustore.uikit.components
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -31,23 +36,30 @@ fun TopSearchBar(
     onQueryChange: (String) -> Unit,
     onSearch: (String) -> Unit,
     modifier: Modifier = Modifier,
+    leadingIcon: @Composable (() -> Unit)? = null,
     onLeadingClick: (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
     onTrailingClick: (() -> Unit)? = null,
 ) {
-    val searchBarState = rememberSearchBarState()
+    var expanded by remember { mutableStateOf(false) }
 
     SearchBar(
         modifier = modifier
             .fillMaxWidth(),
-        state = searchBarState,
+        windowInsets = WindowInsets(0),
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
         tonalElevation = 0.dp,
         inputField = {
             SearchBarDefaults.InputField(
                 query = query,
                 onQueryChange = onQueryChange,
-                onSearch = onSearch,
-                expanded = false,
-                onExpandedChange = {},
+                onSearch = {
+                    onSearch(it)
+                    expanded = false
+                },
+                expanded = expanded,
+                onExpandedChange = { expanded = it },
                 placeholder = {
                     Text(
                         text = "Поиск в RuStore",
@@ -59,22 +71,14 @@ fun TopSearchBar(
                     IconButton(
                         onClick = onLeadingClick ?: {}
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.baseline_search_24),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            contentDescription = "search"
-                        )
+                        leadingIcon?.let { it() }
                     }
                 },
                 trailingIcon = {
                     IconButton(
                         onClick = onTrailingClick ?: {}
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.baseline_mic_none_24),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            contentDescription = "voice search"
-                        )
+                        trailingIcon?.let { it() }
                     }
                 },
                 colors = TextFieldDefaults.colors(
@@ -87,7 +91,7 @@ fun TopSearchBar(
         colors = SearchBarDefaults.colors(
             containerColor = MaterialTheme.colorScheme.surface
         )
-    )
+    ) {}
 }
 
 @Preview

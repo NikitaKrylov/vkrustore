@@ -37,11 +37,11 @@ import com.example.vkrustore.uikit.theme.VKRuStoreTheme
 fun HorizontalAppCard(
     title: String,
     description: String,
-    rating: String,
     actionType: String,
     onClick: () -> Unit,
     imageUrl: String,
     modifier: Modifier = Modifier,
+    rating: String? = null,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -91,19 +91,21 @@ fun HorizontalAppCard(
                     textStyle.fontSize.toDp() - 4.dp
                 }
 
-                Icon(
-                    painter = painterResource(R.drawable.baseline_star_24),
-                    contentDescription = "rating icon",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier
-                        .size(iconSize)
-                )
+                rating?.let {
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_star_24),
+                        contentDescription = "rating icon",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier
+                            .size(iconSize)
+                    )
 
-                Text(
-                    text = rating,
-                    style = TextStyles.LabelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                    Text(
+                        text = rating,
+                        style = TextStyles.LabelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
 
