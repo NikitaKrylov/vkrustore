@@ -71,7 +71,6 @@ internal fun Showcase(
         derivedStateOf { searchQuery.text.isBlank() }
     }
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -184,7 +183,8 @@ internal fun ShowcaseContent(
         onRefresh = { }
     ) {
         LazyColumn(
-            modifier = Modifier,
+            modifier = Modifier
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(spacing8),
             state = listState
         ) {

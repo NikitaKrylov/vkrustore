@@ -80,7 +80,7 @@ internal class ShowcaseViewModel(
             val blocks = List(10) { id ->
                 if (id % 2 == 0) {
                     ShowcaseBlock.ExpandedApp(
-                        id = (id % 3).toString(),
+                        id = (id).toString(),
                         title = "Title app",
                         description = "best app",
                         head = "Head banner",
@@ -91,7 +91,7 @@ internal class ShowcaseViewModel(
                     )
                 } else {
                     ShowcaseBlock.AppsGroup(
-                        title = "Group: ${id % 2}",
+                        title = "Group: ${id}",
                         subtitle = "Sub title",
                         apps = List(9) { id ->
                             AppPreview(
