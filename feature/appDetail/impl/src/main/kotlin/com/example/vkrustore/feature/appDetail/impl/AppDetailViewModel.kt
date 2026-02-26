@@ -2,6 +2,7 @@ package com.example.vkrustore.feature.appDetail.impl
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.ui.res.stringArrayResource
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,6 +15,7 @@ import com.example.vkrustore.data.apps.domain.models.InstallApkState
 import com.example.vkrustore.data.apps.repository.AppsRepository
 import com.example.vkrustore.feature.appDetail.api.AppDetailRoute
 import com.example.vkrustore.feature.appDetail.impl.state.Actions
+import com.example.vkrustore.feature.appDetail.impl.state.AppStatus
 import com.example.vkrustore.feature.appDetail.impl.state.SideEffect
 import com.example.vkrustore.feature.appDetail.impl.state.UiState
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,6 +24,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -72,9 +75,15 @@ internal class AppDetailViewModel(
             downloadApkUseCase(app.apkSourceUrl).collect {
                 when (it) {
                     is DownloadApkState.Error -> {
-                        mutableSideEffect.emit(SideEffect.ShowToast(it.message))
+                        mutableSideEffect.emit(SideEffect.ShowToast("Произошла ошибка во время скачивания"))
                     }
-                    is DownloadApkState.InProgress -> {}
+                    is DownloadApkState.InProgress -> {
+                        mutableState.update { currentState ->
+                            (currentState as UiState.ShowApp).copy(
+                                status = AppStatus.Downloading
+                            )
+                        }
+                    }
                     DownloadApkState.Initial -> {}
                     is DownloadApkState.Success -> installApp(it.file)
                 }
@@ -87,11 +96,23 @@ internal class AppDetailViewModel(
         installApkUseCase(file).collect {
             when (it) {
                 is InstallApkState.Error -> {
-                    mutableSideEffect.emit(SideEffect.ShowToast(it.message))
+                    mutableSideEffect.emit(SideEffect.ShowToast("Произошла ошибка во время установки"))
                 }
-                InstallApkState.InProgress -> {}
+                InstallApkState.InProgress -> {
+                    mutableState.update { currentState ->
+                        (currentState as UiState.ShowApp).copy(
+                            status = AppStatus.Installing
+                        )
+                    }
+                }
                 InstallApkState.Initial -> {}
-                InstallApkState.Success -> {}
+                InstallApkState.Success -> {
+                    mutableState.update { currentState ->
+                        (currentState as UiState.ShowApp).copy(
+                            status = AppStatus.Installed
+                        )
+                    }
+                }
             }
         }
     }

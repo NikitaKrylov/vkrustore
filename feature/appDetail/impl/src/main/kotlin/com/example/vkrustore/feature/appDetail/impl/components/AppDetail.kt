@@ -29,6 +29,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -72,6 +73,7 @@ import coil3.compose.AsyncImagePainter
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.example.vkrustore.feature.appDetail.impl.state.Actions
+import com.example.vkrustore.feature.appDetail.impl.state.AppStatus
 import com.example.vkrustore.feature.appDetail.impl.state.UiState
 import com.example.vkrustore.uikit.BottomBoxShape
 import com.example.vkrustore.uikit.R
@@ -84,6 +86,7 @@ import com.example.vkrustore.uikit.components.ExpandableDescription
 import com.example.vkrustore.uikit.components.PrimaryButton
 import com.example.vkrustore.uikit.extraSmall
 import com.example.vkrustore.uikit.smallShape
+import com.example.vkrustore.uikit.snackbar.AppSnackbarState
 import com.example.vkrustore.uikit.spacing12
 import com.example.vkrustore.uikit.spacing16
 import com.example.vkrustore.uikit.spacing24
@@ -122,6 +125,7 @@ internal fun AppDetail(
             appName = state.name,
             category = state.category,
             onAction = onAction,
+            status = state.status,
         )
 
         AppDetails(
@@ -209,6 +213,7 @@ internal fun AppHeader(
     appIconUrl: String,
     appName: String,
     category: String,
+    status: AppStatus,
     onAction: (Actions) -> Unit,
 ) {
     Box(
@@ -265,8 +270,14 @@ internal fun AppHeader(
                     .fillMaxWidth(),
                 contentPadding = buttonPaddingValues
             ) {
+                val text = when (status) {
+                    AppStatus.Default -> "Установить"
+                    AppStatus.Downloading -> "Скачивание..."
+                    AppStatus.Installed -> "Удалить"
+                    AppStatus.Installing -> "Установка..."
+                }
                 Text(
-                    text = "Скачать",
+                    text = text,
                     style = TextStyles.TitleSmall
                 )
             }
@@ -628,9 +639,23 @@ fun PreviewAppDetail() {
         Surface(
             color = MaterialTheme.colorScheme.background
         ) {
-//            AppDetail(
-//
-//            )
+            AppDetail(
+                state = UiState.ShowApp(
+                    status = AppStatus.Downloading,
+                    name = "TODO()",
+                    description = "TODO()",
+                    appIconUrl = "TODO()",
+                    category = "TODO()",
+                    screenshots = emptyList(),
+                    devName = "TODO()",
+                    ratingAge = 5,
+                    apkSize = "sdfsdf",
+                    installCount = "f",
+                    ratingCount = 1,
+                    rating = 1f
+                ),
+                onAction = {  }
+            )
         }
     }
 }
