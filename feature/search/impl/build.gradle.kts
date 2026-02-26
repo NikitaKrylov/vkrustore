@@ -9,6 +9,7 @@ androidConfig {
     dependencies {
         implementation(libs.kotlinx.serialization)
         implementation(project(":core:common"))
+        api(project(":feature:common"))
         implementation(project(":uikit"))
     }
 }
