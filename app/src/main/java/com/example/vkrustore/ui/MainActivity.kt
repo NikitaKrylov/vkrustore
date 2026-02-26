@@ -109,7 +109,7 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(
                         navController = navController,
-                        startDestination = OnboardingRoute.takeIf { isOnboarding } ?: AppDetailRoute,
+                        startDestination = OnboardingRoute.takeIf { isOnboarding } ?: ShowcaseRoute,
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable<OnboardingRoute> {
