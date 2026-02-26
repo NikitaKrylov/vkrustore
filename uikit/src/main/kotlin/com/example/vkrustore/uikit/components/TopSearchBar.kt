@@ -91,7 +91,9 @@ fun TopSearchBar(
         colors = SearchBarDefaults.colors(
             containerColor = MaterialTheme.colorScheme.surface
         )
-    ) {}
+    ) {
+
+    }
 }
 
 @Preview

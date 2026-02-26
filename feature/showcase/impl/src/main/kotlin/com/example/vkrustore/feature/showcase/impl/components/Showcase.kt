@@ -21,6 +21,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -71,101 +72,100 @@ internal fun Showcase(
         derivedStateOf { searchQuery.text.isBlank() }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .then(
-                Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-                    .takeIf { isSearchEmpty } ?: Modifier
-            )
-    ) {
-        TopAppBar(
-            windowInsets = WindowInsets(0),
-            scrollBehavior = scrollBehavior,
-            title = {
-                TopSearchBar(
-                    modifier = Modifier
-                        .padding(end = spacing16, bottom = spacing8),
-                    query = searchQuery.text.toString(),
-                    onQueryChange = {
-                        searchQuery.edit { replace(0, length, it) }
-                    },
-                    onSearch = {
-                        onAction(ShowcaseAction.OnSearch(it))
-                    },
-                    onLeadingClick = {
-                        onAction(ShowcaseAction.OnSearch(searchQuery.text.toString()))
-                    },
-                    onTrailingClick = {
-                        if (isSearchEmpty) {
-                            // speech to text
-                        } else {
-                            searchQuery.edit { replace(0, length, "") }
-                            onAction(ShowcaseAction.OnClearSearch)
-                        }
-                    },
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(R.drawable.baseline_search_24),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            contentDescription = "search"
-                        )
-                    },
-                    trailingIcon = {
-                        if (isSearchEmpty) {
-                            Icon(
-                                painter = painterResource(R.drawable.baseline_mic_none_24),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                contentDescription = "voice input"
-                            )
-                        } else {
-                            Icon(
-                                painter = painterResource(R.drawable.cancel),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                contentDescription = "clear the input"
-                            )
-                        }
-                    }
-                )
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.Transparent,
-                scrolledContainerColor = Color.Transparent
-            )
-        )
 
-        when (showcaseState) {
-            ShowcaseState.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(120.dp)
+    Scaffold(
+        contentWindowInsets = WindowInsets(),
+        topBar = {
+            TopAppBar(
+                windowInsets = WindowInsets(0),
+                scrollBehavior = scrollBehavior,
+                title = {
+                    TopSearchBar(
+                        modifier = Modifier
+                            .padding(end = spacing16, bottom = spacing8),
+                        query = searchQuery.text.toString(),
+                        onQueryChange = {
+                            searchQuery.edit { replace(0, length, it) }
+                        },
+                        onSearch = {
+                            onAction(ShowcaseAction.OnSearch(it))
+                        },
+                        onLeadingClick = {
+                            onAction(ShowcaseAction.OnSearch(searchQuery.text.toString()))
+                        },
+                        onTrailingClick = {
+                            if (isSearchEmpty) {
+                                // speech to text
+                            } else {
+                                searchQuery.edit { replace(0, length, "") }
+                                onAction(ShowcaseAction.OnClearSearch)
+                            }
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(R.drawable.baseline_search_24),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                contentDescription = "search"
+                            )
+                        },
+                        trailingIcon = {
+                            if (isSearchEmpty) {
+                                Icon(
+                                    painter = painterResource(R.drawable.baseline_mic_none_24),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    contentDescription = "voice input"
+                                )
+                            } else {
+                                Icon(
+                                    painter = painterResource(R.drawable.cancel),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    contentDescription = "clear the input"
+                                )
+                            }
+                        }
                     )
-                }
-            }
-
-            is ShowcaseState.Error ->
-                ErrorBox(
-                    description = showcaseState.message,
-                    icon = {
-                        Icon(
-                            painter = painterResource(R.drawable.geometric),
-                            contentDescription = null,
-                            modifier = Modifier.size(140.dp),
-                            tint = MaterialTheme.colorScheme.primary
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent
+                )
+            )
+        }
+    ) { innerPaddings ->
+        Box(Modifier.padding(innerPaddings)) {
+            when (showcaseState) {
+                ShowcaseState.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(120.dp)
                         )
                     }
-                )
+                }
 
-            is ShowcaseState.Show ->
-                ShowcaseContent(
-                    listState = listState,
-                    blocks = showcaseState.blocks,
-                    isRefreshing = showcaseState.isRefreshing
-                )
+                is ShowcaseState.Error ->
+                    ErrorBox(
+                        description = showcaseState.message,
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.geometric),
+                                contentDescription = null,
+                                modifier = Modifier.size(140.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    )
+
+                is ShowcaseState.Show ->
+                    ShowcaseContent(
+                        listState = listState,
+                        blocks = showcaseState.blocks,
+                        isRefreshing = showcaseState.isRefreshing
+                    )
+            }
         }
     }
 }
