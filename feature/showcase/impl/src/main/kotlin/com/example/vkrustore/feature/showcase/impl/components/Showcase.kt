@@ -30,10 +30,14 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -65,66 +69,28 @@ internal fun Showcase(
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val listState = rememberLazyListState()
+
     val searchState = state.searchState
     val showcaseState = state.showcaseState
     val searchQuery = rememberTextFieldState(searchState.query)
     val isSearchEmpty by remember(searchQuery.text) {
         derivedStateOf { searchQuery.text.isBlank() }
     }
+    val fraction = scrollBehavior.state.collapsedFraction
+    val visibleFraction = 1f - fraction.coerceIn(0f, 1f)
+    var expanded by remember { mutableStateOf(false) }
 
 
     Scaffold(
+        Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         contentWindowInsets = WindowInsets(),
         topBar = {
             TopAppBar(
+                modifier = Modifier
+                    .padding(bottom = spacing8),
                 windowInsets = WindowInsets(0),
                 scrollBehavior = scrollBehavior,
-                title = {
-                    TopSearchBar(
-                        modifier = Modifier
-                            .padding(end = spacing16, bottom = spacing8),
-                        query = searchQuery.text.toString(),
-                        onQueryChange = {
-                            searchQuery.edit { replace(0, length, it) }
-                        },
-                        onSearch = {
-                            onAction(ShowcaseAction.OnSearch(it))
-                        },
-                        onLeadingClick = {
-                            onAction(ShowcaseAction.OnSearch(searchQuery.text.toString()))
-                        },
-                        onTrailingClick = {
-                            if (isSearchEmpty) {
-                                // speech to text
-                            } else {
-                                searchQuery.edit { replace(0, length, "") }
-                                onAction(ShowcaseAction.OnClearSearch)
-                            }
-                        },
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.baseline_search_24),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                contentDescription = "search"
-                            )
-                        },
-                        trailingIcon = {
-                            if (isSearchEmpty) {
-                                Icon(
-                                    painter = painterResource(R.drawable.baseline_mic_none_24),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    contentDescription = "voice input"
-                                )
-                            } else {
-                                Icon(
-                                    painter = painterResource(R.drawable.cancel),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    contentDescription = "clear the input"
-                                )
-                            }
-                        }
-                    )
-                },
+                title = {},
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
                     scrolledContainerColor = Color.Transparent
@@ -168,6 +134,60 @@ internal fun Showcase(
             }
         }
     }
+
+    TopSearchBar(
+        modifier = Modifier
+            .padding(horizontal = 0.dp.takeIf { expanded } ?: spacing16)
+            .graphicsLayer {
+                clip = true
+                scaleY = visibleFraction
+                alpha = visibleFraction
+                transformOrigin = TransformOrigin(0.5f, 0f)
+            },
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        query = searchQuery.text.toString(),
+        onQueryChange = {
+            searchQuery.edit { replace(0, length, it) }
+        },
+        onSearch = {
+            onAction(ShowcaseAction.OnSearch(it))
+            expanded = false
+        },
+        onLeadingClick = {
+            onAction(ShowcaseAction.OnSearch(searchQuery.text.toString()))
+        },
+        onTrailingClick = {
+            if (isSearchEmpty) {
+                // speech to text
+            } else {
+                searchQuery.edit { replace(0, length, "") }
+                onAction(ShowcaseAction.OnClearSearch)
+            }
+        },
+        leadingIcon = {
+            Icon(
+                painter = painterResource(R.drawable.baseline_search_24),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                contentDescription = "search"
+            )
+        },
+        trailingIcon = {
+            if (isSearchEmpty) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_mic_none_24),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    contentDescription = "voice input"
+                )
+            } else {
+                Icon(
+                    painter = painterResource(R.drawable.cancel),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    contentDescription = "clear the input"
+                )
+            }
+        }
+    )
 }
 
 @Composable
