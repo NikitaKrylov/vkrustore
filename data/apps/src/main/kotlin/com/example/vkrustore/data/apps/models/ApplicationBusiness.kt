@@ -11,4 +11,5 @@ data class ApplicationBusiness(
     val apkSourceUrl: String,
     val appIconUrl: String,
     val bannerImageUrl: String? = null,
+    val screens: List<String> = emptyList()
 )

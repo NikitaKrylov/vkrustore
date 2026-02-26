@@ -114,7 +114,7 @@ fun HorizontalAppCard(
             modifier = Modifier.height(spacing32)
         ) {
             Text(
-                text = "Скачать",
+                text = actionType,
                 style = TextStyles.LabelMedium
             )
         }

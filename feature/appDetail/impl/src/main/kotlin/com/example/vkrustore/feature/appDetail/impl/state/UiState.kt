@@ -3,6 +3,7 @@ package com.example.vkrustore.feature.appDetail.impl.state
 internal sealed interface UiState {
     data object Initialize : UiState
     data class ShowApp(
+        val status: AppStatus = AppStatus.Default,
         val name: String,
         val description: String,
         val appIconUrl: String,
@@ -15,4 +16,13 @@ internal sealed interface UiState {
         val ratingCount: Int,
         val rating: Float,
     ) : UiState
+}
+
+internal sealed interface AppStatus {
+    data object Default : AppStatus
+    data object Downloading : AppStatus
+
+    data object Installing : AppStatus
+
+    data object Installed : AppStatus
 }

@@ -46,15 +46,15 @@ internal class AppDetailViewModel(
                 UiState.ShowApp(
                     name = name,
                     description = description,
-                    appIconUrl = "TODO()",
-                    category = "TODO()",
-                    screenshots = emptyList(),
-                    devName = "TODO()",
-                    ratingAge = 0,
-                    apkSize = "TODO()",
-                    installCount = "TODO()",
-                    ratingCount = 0,
-                    rating = 0f,
+                    appIconUrl = appIconUrl,
+                    category = category,
+                    screenshots = screens,
+                    devName = "The best dev",
+                    ratingAge = 18,
+                    apkSize = "100мб",
+                    installCount = "100 000",
+                    ratingCount = 100_000,
+                    rating = 4.5f,
                 )
             )
         }

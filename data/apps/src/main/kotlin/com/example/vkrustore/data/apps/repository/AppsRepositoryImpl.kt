@@ -115,7 +115,7 @@ internal class AppsRepositoryImpl : AppsRepository {
                 bannerImageUrl = null,
             ),
             ApplicationBusiness(
-                id = UUID.randomUUID().toString(),
+                id = "com.twinby",
                 name = "Twinby",
                 category = "some category",
                 rating = Random.nextFloat(),
@@ -123,6 +123,11 @@ internal class AppsRepositoryImpl : AppsRepository {
                 description = "some description",
                 apkSourceUrl = "https://fs343.tbx.su/files10/1970016_025858/twinby_1.5.9.apk",
                 appIconUrl = "https://trashbox.ru/apk_icons/topic_170290_256.png?1771587620",
+                screens = listOf(
+                    "https://trashbox.ru/ifiles2/1914796_c78f5e_screen-0.webp.png-orig.jpg/twinby-android-7.webp",
+                    "https://trashbox.ru/ifiles2/1914797_c056f9_screen-1.webp.png-orig.jpg/twinby-android-8.webp",
+                    "https://trashbox.ru/ifiles2/1914798_764ee0_screen-2.webp.png-orig.jpg/twinby-android-9.webp",
+                ),
                 bannerImageUrl = null,
             ),
             ApplicationBusiness(

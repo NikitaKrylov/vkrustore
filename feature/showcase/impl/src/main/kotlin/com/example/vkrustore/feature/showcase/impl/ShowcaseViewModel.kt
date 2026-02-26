@@ -99,7 +99,7 @@ internal class ShowcaseViewModel(
                         subhead = "Subhead banner",
                         rating = app.rating,
                         bannerImageUrl = "",
-                        appImageUrl = ""
+                        appImageUrl = app.appIconUrl
                     )
                 } else {
                     ShowcaseBlock.AppsGroup(
@@ -111,7 +111,7 @@ internal class ShowcaseViewModel(
                                 title = app.name,
                                 description = app.description,
                                 rating = app.rating,
-                                imageUrl = ""
+                                imageUrl = app.appIconUrl
                             )
                         }
                     )

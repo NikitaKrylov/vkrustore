@@ -36,10 +36,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.modifier.ModifierLocalModifierNode
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.vkrustore.feature.common.ext.isAppInstalled
 import com.example.vkrustore.feature.common.models.AppPreview
 import com.example.vkrustore.feature.showcase.api.ShowcaseAction
 import com.example.vkrustore.feature.showcase.api.models.ShowcaseBlock
@@ -207,7 +209,7 @@ internal fun ShowcaseContent(
                             title = block.title,
                             description = block.description,
                             rating = block.rating?.toString(),
-                            appAction = "action type",
+                            appAction = "Усатновить",
                             bannerImageUrl = block.bannerImageUrl,
                             appImageUrl = block.appImageUrl
                         )
@@ -293,17 +295,17 @@ fun HorizontalAppsPager(
         modifier = modifier
             .fillMaxWidth()
     ) { index ->
-        val items = pages[index]
+        val apps = pages[index]
 
         Column(
             verticalArrangement = Arrangement.spacedBy(spacing12),
         ) {
-            items.forEach { item ->
+            apps.forEach { item ->
                 HorizontalAppCard(
                     title = item.title,
                     description = item.description,
                     rating = item.rating?.toString(),
-                    actionType = "TODO()",
+                    actionType = "Скачать",
                     onClick = {
                         onItemClick(item.id)
                     },
