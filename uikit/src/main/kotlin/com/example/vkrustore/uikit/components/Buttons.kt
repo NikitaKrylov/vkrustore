@@ -30,13 +30,12 @@ enum class ButtonType {
 
 @Composable
 fun AppButton(
-    text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     buttonType: ButtonType = ButtonType.Primary,
-    height: Dp = spacing32,
     shape: Shape = RoundedCornerShape(smallShape),
-    contentPadding: PaddingValues = PaddingValues(horizontal = spacing16)
+    contentPadding: PaddingValues = PaddingValues(horizontal = spacing16),
+    content: @Composable RowScope.() -> Unit
 ) {
     val buttonContent: @Composable (@Composable RowScope.() -> Unit) -> Unit = when (buttonType) {
         ButtonType.Primary -> { content ->
@@ -44,7 +43,7 @@ fun AppButton(
                 onClick = onClick,
                 shape = shape,
                 contentPadding = contentPadding,
-                modifier = modifier.height(height),
+                modifier = modifier,
                 content = content
             )
         }
@@ -54,46 +53,49 @@ fun AppButton(
                 onClick = onClick,
                 shape = shape,
                 contentPadding = contentPadding,
-                modifier = modifier.height(height),
+                modifier = modifier,
                 content = content
             )
         }
     }
 
-    buttonContent {
-        Text(
-            text = text,
-            style = TextStyles.LabelMedium
-        )
-    }
+    buttonContent { content() }
 }
 
 
 @Composable
 fun SecondaryButton(
-    text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(smallShape),
+    contentPadding: PaddingValues = PaddingValues(horizontal = spacing16),
+    content: @Composable RowScope.() -> Unit
 ) {
     AppButton(
-        text = text,
         onClick = onClick,
         buttonType = ButtonType.Secondary,
-        modifier = modifier
+        modifier = modifier,
+        shape = shape,
+        contentPadding = contentPadding,
+        content = content
     )
 }
 
 @Composable
 fun PrimaryButton(
-    text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(smallShape),
+    contentPadding: PaddingValues = PaddingValues(horizontal = spacing16),
+    content: @Composable RowScope.() -> Unit
 ) {
     AppButton(
-        text = text,
         onClick = onClick,
         buttonType = ButtonType.Primary,
-        modifier = modifier
+        modifier = modifier,
+        shape = shape,
+        contentPadding = contentPadding,
+        content = content
     )
 }
 
@@ -104,9 +106,13 @@ fun PrimaryButton(
 fun PreviewSecondaryButton() {
     VKRuStoreTheme {
         SecondaryButton(
-            text = "Download",
             onClick = {}
-        )
+        ) {
+            Text(
+                text = "Download",
+                style = TextStyles.LabelMedium
+            )
+        }
     }
 }
 
@@ -116,8 +122,12 @@ fun PreviewSecondaryButton() {
 fun PreviewPrimaryButton() {
     VKRuStoreTheme {
         PrimaryButton(
-            text = "Download",
             onClick = {}
-        )
+        ) {
+            Text(
+                text = "Download",
+                style = TextStyles.LabelMedium
+            )
+        }
     }
 }

@@ -30,6 +30,7 @@ import com.example.vkrustore.feature.account.api.AccountRoute
 import com.example.vkrustore.feature.account.impl.AccountScreen
 import com.example.vkrustore.feature.appDetail.api.AppDetailRoute
 import com.example.vkrustore.feature.appDetail.impl.AppDetailScreen
+import com.example.vkrustore.feature.appDetail.impl.components.AppDetail
 import com.example.vkrustore.feature.categories.api.CategoriesRoute
 import com.example.vkrustore.feature.categories.impl.CategoriesScreen
 import com.example.vkrustore.feature.onboarding.api.OnboardingRoute

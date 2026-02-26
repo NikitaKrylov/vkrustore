@@ -32,5 +32,4 @@ fun OnboardingScreen(
             }
         }
     }
-
 }

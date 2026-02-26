@@ -173,7 +173,6 @@ fun Modifier.changeBackgroundClickable(
 }
 
 
-
 fun Modifier.placeWithAddedWidth(
     addedWidth: Dp,
 ): Modifier {
@@ -232,4 +231,18 @@ fun Modifier.scaledSize(size: Dp): Modifier = composed {
 
     this.then(Modifier.size(scaledSize))
 }
+
+// Source - https://stackoverflow.com/a/71939281
+// Posted by user1185087, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-02-26, License - CC BY-SA 4.0
+fun Modifier.ignoreHorizontalParentPadding(horizontal: Dp): Modifier {
+    return this.layout { measurable, constraints ->
+        val overridenWidth = constraints.maxWidth + 2 * horizontal.roundToPx()
+        val placeable = measurable.measure(constraints.copy(maxWidth = overridenWidth))
+        layout(placeable.width, placeable.height) {
+            placeable.place(0, 0)
+        }
+    }
+}
+
 

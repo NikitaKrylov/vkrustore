@@ -83,9 +83,13 @@ fun PreviewErrorBox() {
             },
             button = {
                 PrimaryButton(
-                    text = "update",
                     onClick = {}
-                )
+                ) {
+                    Text(
+                        text = "update",
+                        style = TextStyles.LabelMedium
+                    )
+                }
             }
         )
     }
