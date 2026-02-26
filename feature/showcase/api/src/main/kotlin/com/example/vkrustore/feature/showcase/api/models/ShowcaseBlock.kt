@@ -6,12 +6,14 @@ sealed interface ShowcaseBlock {
     val title: String
 
     data class ExpandedApp(
-        val id: Long,
+        val id: String,
         override val title: String,
         val description: String,
-        val imageUrl: String,
+        val bannerImageUrl: String,
+        val appImageUrl: String,
+        val rating: Float?,
         val head: String? = null,
-        val subhead: String? = null
+        val subhead: String? = null,
     ) : ShowcaseBlock
 
     data class AppsGroup(
