@@ -35,20 +35,20 @@ fun TopSearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     onSearch: (String) -> Unit,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     leadingIcon: @Composable (() -> Unit)? = null,
     onLeadingClick: (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     onTrailingClick: (() -> Unit)? = null,
 ) {
-    var expanded by remember { mutableStateOf(false) }
-
     SearchBar(
         modifier = modifier
             .fillMaxWidth(),
         windowInsets = WindowInsets(0),
         expanded = expanded,
-        onExpandedChange = { expanded = it },
+        onExpandedChange = onExpandedChange,
         tonalElevation = 0.dp,
         inputField = {
             SearchBarDefaults.InputField(
@@ -56,10 +56,9 @@ fun TopSearchBar(
                 onQueryChange = onQueryChange,
                 onSearch = {
                     onSearch(it)
-                    expanded = false
                 },
                 expanded = expanded,
-                onExpandedChange = { expanded = it },
+                onExpandedChange = onExpandedChange,
                 placeholder = {
                     Text(
                         text = "Поиск в RuStore",
@@ -103,7 +102,9 @@ fun PreviewTopSearchBar() {
         TopSearchBar(
             query = "",
             onQueryChange = {},
-            onSearch = {}
+            onSearch = {},
+            expanded = true,
+            onExpandedChange = {}
         )
     }
 }
