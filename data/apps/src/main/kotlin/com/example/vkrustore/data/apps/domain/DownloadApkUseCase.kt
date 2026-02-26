@@ -3,6 +3,7 @@ package com.example.vkrustore.data.apps.domain
 import android.app.DownloadManager
 import android.database.Cursor
 import android.net.Uri
+import android.os.Environment
 import android.util.Log
 import androidx.core.net.toUri
 import com.example.vkrustore.data.apps.domain.models.DownloadApkState
@@ -75,37 +76,34 @@ class DownloadApkUseCase(
 
         while (true) {
 
-            val cursor: Cursor =
-                downloadManager.query(query)
+            val cursor: Cursor = downloadManager.query(query)
 
             if (!cursor.moveToFirst()) {
                 cursor.close()
                 emit(DownloadApkState.Error("Download file not found"))
             }
 
-            val status =
-                cursor.getInt(
-                    cursor.getColumnIndexOrThrow(
-                        DownloadManager.COLUMN_STATUS
-                    )
+            val status = cursor.getInt(
+                cursor.getColumnIndexOrThrow(
+                    DownloadManager.COLUMN_STATUS
                 )
+            )
 
-            val total =
-                cursor.getLong(
-                    cursor.getColumnIndexOrThrow(
-                        DownloadManager.COLUMN_TOTAL_SIZE_BYTES
-                    )
+            val total = cursor.getLong(
+                cursor.getColumnIndexOrThrow(
+                    DownloadManager.COLUMN_TOTAL_SIZE_BYTES
                 )
+            )
 
-            val downloaded =
-                cursor.getLong(
-                    cursor.getColumnIndexOrThrow(
-                        DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR
-                    )
+            val downloaded = cursor.getLong(
+                cursor.getColumnIndexOrThrow(
+                    DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR
                 )
+            )
 
             if (total > 0) {
                 val progress = ((downloaded * 100) / total).toInt()
+                Log.i("TAD", "Progress: $progress")
                 emit(DownloadApkState.InProgress(progress))
             }
 

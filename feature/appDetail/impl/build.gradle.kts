@@ -8,6 +8,7 @@ plugins {
 androidConfig {
     dependencies {
         implementation(project(":feature:appDetail:api"))
+        implementation(project(":data:apps"))
         implementation(project(":feature:common"))
         implementation(project(":uikit"))
 

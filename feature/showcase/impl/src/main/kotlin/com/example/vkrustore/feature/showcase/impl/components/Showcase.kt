@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.modifier.ModifierLocalModifierNode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -163,7 +164,10 @@ internal fun Showcase(
                     ShowcaseContent(
                         listState = listState,
                         blocks = showcaseState.blocks,
-                        isRefreshing = showcaseState.isRefreshing
+                        isRefreshing = showcaseState.isRefreshing,
+                        onItemClick = { id ->
+                            onAction(ShowcaseAction.OnAppClick(id))
+                        }
                     )
             }
         }
@@ -174,7 +178,8 @@ internal fun Showcase(
 internal fun ShowcaseContent(
     listState: LazyListState,
     blocks: List<ShowcaseBlock>,
-    isRefreshing: Boolean = false
+    isRefreshing: Boolean = false,
+    onItemClick: (String) -> Unit,
 ) {
     PullToRefreshBox(
         modifier = Modifier.fillMaxSize(),
@@ -211,7 +216,8 @@ internal fun ShowcaseContent(
                         VerticalAppsGroup(
                             title = block.title,
                             subtitle = block.subtitle,
-                            groupApp = block.apps
+                            groupApp = block.apps,
+                            onItemClick = onItemClick,
                         )
                 }
             }
@@ -226,7 +232,8 @@ fun VerticalAppsGroup(
     title: String,
     groupApp: List<AppPreview>,
     modifier: Modifier = Modifier,
-    subtitle: String? = null
+    subtitle: String? = null,
+    onItemClick: (String) -> Unit,
 ) {
     val pages = remember(groupApp) {
         groupApp.chunked(3)
@@ -263,6 +270,7 @@ fun VerticalAppsGroup(
 
         HorizontalAppsPager(
             pages = pages,
+            onItemClick = onItemClick,
         )
     }
 }
@@ -271,7 +279,8 @@ fun VerticalAppsGroup(
 @Composable
 fun HorizontalAppsPager(
     pages: List<List<AppPreview>>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onItemClick: (String) -> Unit,
 ) {
     val pagerState = rememberPagerState { pages.size }
 
@@ -295,7 +304,9 @@ fun HorizontalAppsPager(
                     description = item.description,
                     rating = item.rating?.toString(),
                     actionType = "TODO()",
-                    onClick = { },
+                    onClick = {
+                        onItemClick(item.id)
+                    },
                     imageUrl = item.imageUrl
                 )
             }

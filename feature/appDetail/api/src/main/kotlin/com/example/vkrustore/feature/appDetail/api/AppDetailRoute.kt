@@ -4,4 +4,6 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data object AppDetailRoute
+data class AppDetailRoute(
+    val appId: String,
+)

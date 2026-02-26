@@ -1,6 +1,5 @@
 package com.example.vkrustore.feature.appDetail.impl.components
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -63,7 +62,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -73,7 +71,8 @@ import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.rememberAsyncImagePainter
-import com.example.vkrustore.feature.appDetail.api.models.ApplicationDetails
+import com.example.vkrustore.feature.appDetail.impl.state.Actions
+import com.example.vkrustore.feature.appDetail.impl.state.UiState
 import com.example.vkrustore.uikit.BottomBoxShape
 import com.example.vkrustore.uikit.R
 import com.example.vkrustore.uikit.TextStyles
@@ -94,11 +93,16 @@ import com.example.vkrustore.uikit.spacing48
 import com.example.vkrustore.uikit.spacing8
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
 import com.example.vkrustore.uikit.utils.extentions.ignoreHorizontalParentPadding
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppDetail() {
+internal fun AppDetail(
+    state: UiState.ShowApp,
+    onAction: (Actions) -> Unit
+) {
     val scrollState = rememberScrollState()
     val alpha by remember {
         derivedStateOf {
@@ -106,30 +110,6 @@ fun AppDetail() {
         }
     }
 
-    val appDetail = ApplicationDetails(
-        id = "1",
-        name = "App",
-        category = "some cat",
-        rating = 5f,
-        ratingCount = 10000,
-        description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam auctor pretium turpis. " +
-                "Pellentesque eleifend tincidunt enim porttitor aliquam. Suspendisse a fringilla elit, eu aliquam " +
-                "libero. Vestibulum volutpat massa diam, ut feugiat velit molestie ut. Aenean sit amet gravida felis" +
-                ". Vestibulum scelerisque felis at turpis tincidunt, a feugiat mauris mollis. Vestibulum ante ipsum " +
-                "primis in faucibus orci luctus et ultrices posuere cubilia curae; Class aptent taciti sociosqu ad " +
-                "litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse dignissim nisl eu metus " +
-                "cursus iaculis. Pellentesque iaculis et lectus sed iaculis. Sed porta nisi dolor, venenatis auctor " +
-                "erat lacinia vel. Donec finibus ac.",
-        installCount = "10 млн",
-        apkSourceUrl = "https://fs286.tbx.su/files10/2214012_bc24de/ninjagram-all-abi-12.0.1.1.apk",
-        appIconUrl = "https://trashbox.ru/apk_icons/topic_200596_320.png?1760633467",
-        apkSize = "30 мб",
-        ratingAge = 6,
-        devName = "DevelopName",
-        screenshots = List(5) {
-            "https://www.gstatic.com/webp/gallery/1.webp"
-        }
-    )
 
     Column(
         modifier = Modifier
@@ -138,20 +118,21 @@ fun AppDetail() {
         verticalArrangement = Arrangement.spacedBy(spacing8)
     ) {
         AppHeader(
-            appIconUrl = appDetail.appIconUrl,
-            appName = appDetail.name,
-            category = appDetail.category
+            appIconUrl = state.appIconUrl,
+            appName = state.name,
+            category = state.category,
+            onAction = onAction,
         )
 
         AppDetails(
-            rating = appDetail.rating ?: 0f,
-            ratingCount = appDetail.ratingCount ?: 0,
-            installCount = appDetail.installCount,
-            apkSize = appDetail.apkSize,
-            ratingAge = appDetail.ratingAge,
-            description = appDetail.description,
-            devName = appDetail.devName,
-            screenshots = appDetail.screenshots
+            rating = state.rating,
+            ratingCount = state.ratingCount,
+            installCount = state.installCount,
+            apkSize = state.apkSize,
+            ratingAge = state.ratingAge,
+            description = state.description,
+            devName = state.devName,
+            screenshots = state.screenshots
         )
     }
 
@@ -159,7 +140,9 @@ fun AppDetail() {
         windowInsets = WindowInsets(0),
         navigationIcon = {
             IconButton(
-                onClick = {}
+                onClick = {
+                    onAction(Actions.NavigateBack)
+                }
             ) {
                 Icon(
                     painter = painterResource(R.drawable.baseline_arrow_back_24),
@@ -198,7 +181,7 @@ fun AppDetail() {
                 SubcomposeAsyncImage(
                     modifier = Modifier
                         .size(42.dp),
-                    model = appDetail.appIconUrl,
+                    model = state.appIconUrl,
                     contentDescription = "app card image",
                     contentScale = ContentScale.Crop,
                     error = {
@@ -209,7 +192,7 @@ fun AppDetail() {
                 )
 
                 Text(
-                    text = appDetail.name,
+                    text = state.name,
                     style = TextStyles.TitleSmall
                 )
             }
@@ -225,7 +208,8 @@ fun AppDetail() {
 internal fun AppHeader(
     appIconUrl: String,
     appName: String,
-    category: String
+    category: String,
+    onAction: (Actions) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -274,7 +258,9 @@ internal fun AppHeader(
             Spacer(Modifier.height(spacing12))
 
             PrimaryButton(
-                onClick = {},
+                onClick = {
+                    onAction(Actions.Submit)
+                },
                 modifier = Modifier
                     .fillMaxWidth(),
                 contentPadding = buttonPaddingValues
@@ -303,7 +289,7 @@ internal fun AppDetails(
     val coroutineScope = rememberCoroutineScope()
     var fullScreenIndex by remember { mutableStateOf<Int?>(null) }
     var aspectRatio by remember { mutableFloatStateOf(1f) }
-    val image = rememberAsyncImagePainter(model = screenshots[0])
+    val image = rememberAsyncImagePainter(model = screenshots.firstOrNull())
 
     LaunchedEffect(Unit) {
         coroutineScope.launch {
@@ -642,9 +628,9 @@ fun PreviewAppDetail() {
         Surface(
             color = MaterialTheme.colorScheme.background
         ) {
-            AppDetail(
-
-            )
+//            AppDetail(
+//
+//            )
         }
     }
 }

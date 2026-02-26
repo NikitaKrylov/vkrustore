@@ -9,8 +9,12 @@ import com.example.vkrustore.feature.showcase.api.models.ShowcaseBlock
 import com.example.vkrustore.feature.showcase.impl.state.MainShowcaseState
 import com.example.vkrustore.feature.showcase.impl.state.SearchState
 import com.example.vkrustore.feature.showcase.impl.state.ShowcaseState
+import com.example.vkrustore.feature.showcase.impl.state.SideEffect
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -22,6 +26,9 @@ internal class ShowcaseViewModel(
 ) : ViewModel() {
     private val _searchStateFlow: MutableStateFlow<SearchState> = MutableStateFlow(SearchState(""))
     private val _showcaseStateFlow: MutableStateFlow<ShowcaseState> = MutableStateFlow(ShowcaseState.Loading)
+
+    private val mutableSideEffect = MutableSharedFlow<SideEffect>()
+    val sideEffect = mutableSideEffect.asSharedFlow()
 
     val uiStateFlow = combine(
         _searchStateFlow,
@@ -42,14 +49,17 @@ internal class ShowcaseViewModel(
             )
         )
 
-    fun processAction(action: ShowcaseAction) {
+    fun processAction(action: ShowcaseAction) = viewModelScope.launch {
         when (action) {
             ShowcaseAction.OnRefresh -> refresh()
-            is ShowcaseAction.OnAppClick -> TODO()
+            is ShowcaseAction.OnAppClick -> mutableSideEffect.emit(
+                SideEffect.NavigateToAppDetail(action.appId)
+            )
             is ShowcaseAction.OnSearch -> search(action.query)
             ShowcaseAction.OnClearSearch -> clearSearch()
         }
     }
+
 
     private fun refresh() {
         search(_searchStateFlow.value.query)
@@ -77,35 +87,36 @@ internal class ShowcaseViewModel(
         viewModelScope.launch {
             _showcaseStateFlow.emit(ShowcaseState.Loading)
 
-            val blocks = List(10) { id ->
-                if (id % 2 == 0) {
+            val apps = appsRepository.getAll()
+
+            val blocks = apps.mapIndexed { index, app ->
+                if (index % 2 == 0) {
                     ShowcaseBlock.ExpandedApp(
-                        id = (id).toString(),
-                        title = "Title app",
-                        description = "best app",
+                        id = app.id,
+                        title = app.name,
+                        description = app.description,
                         head = "Head banner",
                         subhead = "Subhead banner",
-                        rating = 5f,
+                        rating = app.rating,
                         bannerImageUrl = "",
                         appImageUrl = ""
                     )
                 } else {
                     ShowcaseBlock.AppsGroup(
-                        title = "Group: ${id}",
+                        title = "Group: $index",
                         subtitle = "Sub title",
-                        apps = List(9) { id ->
+                        apps = List(9) {
                             AppPreview(
-                                id = id.toString(),
-                                title = "Title app",
-                                description = "best app",
-                                rating = 5f,
+                                id = app.id,
+                                title = app.name,
+                                description = app.description,
+                                rating = app.rating,
                                 imageUrl = ""
                             )
                         }
                     )
                 }
-            }
-                .filter { it.title.contains(query, ignoreCase = true) }
+            }.filter { it.title.contains(query, ignoreCase = true) }
 
             if (blocks.isNotEmpty()) {
                 _showcaseStateFlow.emit(
