@@ -10,6 +10,23 @@ RuStore Catalog — это клиентское Android-приложение, р
 
 ---
 
+## 🚀 Установка и сборка
+
+1. Клонировать репозиторий:
+```bash
+   git clone git@github.com:NikitaKrylov/vkrustore.git
+   cd vkrustore
+```
+
+2. Собрать и установить(билдит apk файл. не обязательно):
+```bash
+   ./gradlew clean assembleDebug 
+```
+
+4. Запуск в Android Studio:
+    - Откройте проект, дождитесь синхронизации Gradle(нажать кнопку sync).
+    - Нажмите ▶️ Run на вашем устройстве или эмуляторе.
+
 ## ✨ Основные функции
 
 ### Онбординг
