@@ -10,5 +10,8 @@ androidConfig {
         implementation(project(":feature:appDetail:api"))
         implementation(project(":feature:common"))
         implementation(project(":uikit"))
+
+        implementation(libs.coil.compose)
+        implementation(libs.coil.network.okhttp)
     }
 }
