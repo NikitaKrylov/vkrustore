@@ -1,15 +1,22 @@
 package com.example.vkrustore.feature.showcase.impl.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fitOutside
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -39,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.WindowInsetsRulers
 import androidx.compose.ui.modifier.ModifierLocalModifierNode
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -85,13 +93,13 @@ internal fun Showcase(
 
 
     Scaffold(
-        Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        contentWindowInsets = WindowInsets(),
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        contentWindowInsets = WindowInsets.systemBars,
         topBar = {
             TopAppBar(
                 modifier = Modifier
                     .padding(bottom = spacing8),
-                windowInsets = WindowInsets(0),
+                windowInsets = WindowInsets.statusBars,
                 scrollBehavior = scrollBehavior,
                 title = {},
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -148,7 +156,7 @@ internal fun Showcase(
                 clip = true
                 scaleY = visibleFraction
                 alpha = visibleFraction
-                transformOrigin = TransformOrigin(0.5f, 0f)
+                transformOrigin = TransformOrigin(0.5f, 0.4f)
             },
         expanded = expanded,
         onExpandedChange = { expanded = it },
@@ -194,6 +202,7 @@ internal fun Showcase(
             }
         }
     )
+
 }
 
 @Composable

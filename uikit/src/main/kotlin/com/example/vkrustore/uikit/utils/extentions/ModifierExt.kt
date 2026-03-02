@@ -7,8 +7,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -243,6 +249,21 @@ fun Modifier.ignoreHorizontalParentPadding(horizontal: Dp): Modifier {
             placeable.place(0, 0)
         }
     }
+}
+
+@Composable
+fun Modifier.defaultScreenPadding(): Modifier = composed {
+    this.padding(WindowInsets.systemBars.asPaddingValues())
+}
+
+@Composable
+fun Modifier.statusBarPadding(): Modifier = composed {
+    this.padding(WindowInsets.statusBars.asPaddingValues())
+}
+
+@Composable
+fun Modifier.navBarPadding(): Modifier = composed {
+    this.padding(WindowInsets.navigationBars.asPaddingValues())
 }
 
 

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,7 +28,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -86,7 +84,6 @@ import com.example.vkrustore.uikit.components.ExpandableDescription
 import com.example.vkrustore.uikit.components.PrimaryButton
 import com.example.vkrustore.uikit.extraSmall
 import com.example.vkrustore.uikit.smallShape
-import com.example.vkrustore.uikit.snackbar.AppSnackbarState
 import com.example.vkrustore.uikit.spacing12
 import com.example.vkrustore.uikit.spacing16
 import com.example.vkrustore.uikit.spacing24
@@ -96,7 +93,7 @@ import com.example.vkrustore.uikit.spacing48
 import com.example.vkrustore.uikit.spacing8
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
 import com.example.vkrustore.uikit.utils.extentions.ignoreHorizontalParentPadding
-import kotlinx.coroutines.Job
+import com.example.vkrustore.uikit.utils.extentions.statusBarPadding
 import kotlinx.coroutines.launch
 
 
@@ -112,7 +109,6 @@ internal fun AppDetail(
             (scrollState.value / 400f).coerceIn(0f, 1f)
         }
     }
-
 
     Column(
         modifier = Modifier
@@ -141,7 +137,6 @@ internal fun AppDetail(
     }
 
     TopAppBar(
-        windowInsets = WindowInsets(0),
         navigationIcon = {
             IconButton(
                 onClick = {
@@ -214,7 +209,7 @@ internal fun AppHeader(
     appName: String,
     category: String,
     status: AppStatus,
-    onAction: (Actions) -> Unit,
+    onAction: (Actions) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -227,7 +222,8 @@ internal fun AppHeader(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .statusBarPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SubcomposeAsyncImage(
@@ -282,7 +278,6 @@ internal fun AppHeader(
                 )
             }
         }
-
     }
 }
 
@@ -654,7 +649,7 @@ fun PreviewAppDetail() {
                     ratingCount = 1,
                     rating = 1f
                 ),
-                onAction = {  }
+                onAction = { }
             )
         }
     }
