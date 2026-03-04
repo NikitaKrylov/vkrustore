@@ -122,7 +122,8 @@ internal class AppDetailViewModel(
 
     private suspend fun calcDominantColor(bitmap: Bitmap) {
         val palette = withContext(Dispatchers.Default) {
-            Palette.from(bitmap).generate()
+            val bmp = bitmap.copy(Bitmap.Config.ARGB_8888, false)
+            Palette.from(bmp).generate()
         }
 
         palette.dominantSwatch?.rgb?.let {
