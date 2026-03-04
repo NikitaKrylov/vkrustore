@@ -46,7 +46,6 @@ fun TopSearchBar(
     SearchBar(
         modifier = modifier
             .fillMaxWidth(),
-//        windowInsets = WindowInsets(0),
         expanded = expanded,
         onExpandedChange = onExpandedChange,
         tonalElevation = 0.dp,

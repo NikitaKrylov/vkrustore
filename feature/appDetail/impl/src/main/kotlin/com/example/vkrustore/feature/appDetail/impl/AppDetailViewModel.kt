@@ -1,8 +1,6 @@
 package com.example.vkrustore.feature.appDetail.impl
 
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -68,7 +66,7 @@ internal class AppDetailViewModel(
         when (action) {
             Actions.NavigateBack -> mutableSideEffect.emit(SideEffect.NavigateBack)
             Actions.Submit -> downloadApk()
-            is Actions.CalcDominantColor -> calcDominantColor(action.drawable)
+            is Actions.CalcDominantColor -> calcDominantColor(action.bitmap)
         }
     }
 
@@ -122,11 +120,9 @@ internal class AppDetailViewModel(
         }
     }
 
-    private suspend fun calcDominantColor(drawable: Drawable) {
-        val bmp = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
-
+    private suspend fun calcDominantColor(bitmap: Bitmap) {
         val palette = withContext(Dispatchers.Default) {
-            Palette.from(bmp).generate()
+            Palette.from(bitmap).generate()
         }
 
         palette.dominantSwatch?.rgb?.let {

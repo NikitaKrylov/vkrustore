@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -71,11 +70,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import coil3.asDrawable
+import androidx.core.graphics.drawable.toBitmap
+import coil3.BitmapImage
+import coil3.DrawableImage
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.rememberAsyncImagePainter
+import coil3.toBitmap
 import com.example.vkrustore.feature.appDetail.impl.state.Actions
 import com.example.vkrustore.feature.appDetail.impl.state.AppStatus
 import com.example.vkrustore.feature.appDetail.impl.state.UiState
@@ -262,7 +264,7 @@ internal fun AppHeader(
                 contentDescription = "app card image",
                 contentScale = ContentScale.Crop,
                 onSuccess = {
-                    val img = it.result.image.asDrawable(localResource)
+                    val img = it.result.image.toBitmap()
                     onAction(Actions.CalcDominantColor(img))
                 },
                 error = {
