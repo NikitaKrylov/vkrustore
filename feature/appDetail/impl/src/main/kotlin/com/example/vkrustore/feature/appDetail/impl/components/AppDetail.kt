@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -62,7 +63,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -98,7 +98,6 @@ import com.example.vkrustore.uikit.spacing48
 import com.example.vkrustore.uikit.spacing8
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
 import com.example.vkrustore.uikit.utils.extentions.ignoreHorizontalParentPadding
-import com.example.vkrustore.uikit.utils.extentions.statusBarPadding
 import kotlinx.coroutines.launch
 
 
@@ -218,7 +217,6 @@ internal fun AppHeader(
     dominantColor: Color,
     onAction: (Actions) -> Unit
 ) {
-    val localResource = LocalResources.current
     val defaultDominantColor = MaterialTheme.colorScheme.surfaceVariant
     val animatedColor by animateColorAsState(
         dominantColor,
@@ -250,7 +248,7 @@ internal fun AppHeader(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .statusBarPadding()
+                .statusBarsPadding()
                 .padding(spacing24),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

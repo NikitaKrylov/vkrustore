@@ -251,19 +251,4 @@ fun Modifier.ignoreHorizontalParentPadding(horizontal: Dp): Modifier {
     }
 }
 
-@Composable
-fun Modifier.defaultScreenPadding(): Modifier = composed {
-    this.padding(WindowInsets.systemBars.asPaddingValues())
-}
-
-@Composable
-fun Modifier.statusBarPadding(): Modifier = composed {
-    this.padding(WindowInsets.statusBars.asPaddingValues())
-}
-
-@Composable
-fun Modifier.navBarPadding(): Modifier = composed {
-    this.padding(WindowInsets.navigationBars.asPaddingValues())
-}
-
 
