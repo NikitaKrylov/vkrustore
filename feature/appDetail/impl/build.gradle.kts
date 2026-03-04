@@ -12,6 +12,7 @@ androidConfig {
         implementation(project(":feature:common"))
         implementation(project(":uikit"))
 
+        implementation(libs.androidx.palette)
         implementation(libs.coil.compose)
         implementation(libs.coil.network.okhttp)
     }

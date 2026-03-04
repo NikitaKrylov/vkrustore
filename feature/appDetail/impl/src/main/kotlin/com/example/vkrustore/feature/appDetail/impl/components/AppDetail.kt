@@ -1,5 +1,7 @@
 package com.example.vkrustore.feature.appDetail.impl.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -53,12 +56,14 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -66,6 +71,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import coil3.asDrawable
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.SubcomposeAsyncImage
@@ -120,8 +126,9 @@ internal fun AppDetail(
             appIconUrl = state.appIconUrl,
             appName = state.name,
             category = state.category,
-            onAction = onAction,
             status = state.status,
+            dominantColor = state.dominantColor ?: MaterialTheme.colorScheme.surfaceVariant,
+            onAction = onAction
         )
 
         AppDetails(
@@ -209,21 +216,43 @@ internal fun AppHeader(
     appName: String,
     category: String,
     status: AppStatus,
+    dominantColor: Color,
     onAction: (Actions) -> Unit
 ) {
+    val localResource = LocalResources.current
+    val defaultDominantColor = MaterialTheme.colorScheme.surfaceVariant
+    val animatedColor by animateColorAsState(
+        dominantColor,
+        animationSpec = tween(
+            durationMillis = 2000
+        )
+    )
+
     Box(
         modifier = Modifier
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = BottomBoxShape
             )
-            .padding(spacing24)
             .fillMaxWidth()
     ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .height(140.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(animatedColor.copy(alpha = 0.25f), defaultDominantColor)
+                    )
+                )
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .statusBarPadding(),
+                .statusBarPadding()
+                .padding(spacing24),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SubcomposeAsyncImage(
@@ -232,6 +261,10 @@ internal fun AppHeader(
                 model = appIconUrl,
                 contentDescription = "app card image",
                 contentScale = ContentScale.Crop,
+                onSuccess = {
+                    val img = it.result.image.asDrawable(localResource)
+                    onAction(Actions.CalcDominantColor(img))
+                },
                 error = {
                     AppImageError(
                         shape = RoundedCornerShape(boxShape)
