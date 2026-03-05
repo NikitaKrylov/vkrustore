@@ -1,5 +1,7 @@
 package com.example.vkrustore.feature.appDetail.impl.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,13 +16,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -29,7 +31,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -55,6 +56,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
@@ -72,6 +74,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.rememberAsyncImagePainter
+import coil3.toBitmap
 import com.example.vkrustore.feature.appDetail.impl.state.Actions
 import com.example.vkrustore.feature.appDetail.impl.state.AppStatus
 import com.example.vkrustore.feature.appDetail.impl.state.UiState
@@ -86,7 +89,6 @@ import com.example.vkrustore.uikit.components.ExpandableDescription
 import com.example.vkrustore.uikit.components.PrimaryButton
 import com.example.vkrustore.uikit.extraSmall
 import com.example.vkrustore.uikit.smallShape
-import com.example.vkrustore.uikit.snackbar.AppSnackbarState
 import com.example.vkrustore.uikit.spacing12
 import com.example.vkrustore.uikit.spacing16
 import com.example.vkrustore.uikit.spacing24
@@ -96,7 +98,6 @@ import com.example.vkrustore.uikit.spacing48
 import com.example.vkrustore.uikit.spacing8
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
 import com.example.vkrustore.uikit.utils.extentions.ignoreHorizontalParentPadding
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
@@ -113,7 +114,6 @@ internal fun AppDetail(
         }
     }
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -124,8 +124,9 @@ internal fun AppDetail(
             appIconUrl = state.appIconUrl,
             appName = state.name,
             category = state.category,
-            onAction = onAction,
             status = state.status,
+            dominantColor = state.dominantColor ?: MaterialTheme.colorScheme.surfaceVariant,
+            onAction = onAction
         )
 
         AppDetails(
@@ -141,7 +142,6 @@ internal fun AppDetail(
     }
 
     TopAppBar(
-        windowInsets = WindowInsets(0),
         navigationIcon = {
             IconButton(
                 onClick = {
@@ -214,20 +214,42 @@ internal fun AppHeader(
     appName: String,
     category: String,
     status: AppStatus,
-    onAction: (Actions) -> Unit,
+    dominantColor: Color,
+    onAction: (Actions) -> Unit
 ) {
+    val defaultDominantColor = MaterialTheme.colorScheme.surfaceVariant
+    val animatedColor by animateColorAsState(
+        dominantColor,
+        animationSpec = tween(
+            durationMillis = 2000
+        )
+    )
+
     Box(
         modifier = Modifier
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = BottomBoxShape
             )
-            .padding(spacing24)
             .fillMaxWidth()
     ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .height(140.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(animatedColor.copy(alpha = 0.25f), defaultDominantColor)
+                    )
+                )
+        )
+
         Column(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .statusBarsPadding()
+                .padding(spacing24),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SubcomposeAsyncImage(
@@ -236,6 +258,10 @@ internal fun AppHeader(
                 model = appIconUrl,
                 contentDescription = "app card image",
                 contentScale = ContentScale.Crop,
+                onSuccess = {
+                    val img = it.result.image.toBitmap()
+                    onAction(Actions.CalcDominantColor(img))
+                },
                 error = {
                     AppImageError(
                         shape = RoundedCornerShape(boxShape)
@@ -282,7 +308,6 @@ internal fun AppHeader(
                 )
             }
         }
-
     }
 }
 
@@ -654,7 +679,7 @@ fun PreviewAppDetail() {
                     ratingCount = 1,
                     rating = 1f
                 ),
-                onAction = {  }
+                onAction = { }
             )
         }
     }

@@ -1,5 +1,7 @@
 package com.example.vkrustore.feature.appDetail.impl.state
 
+import androidx.compose.ui.graphics.Color
+
 internal sealed interface UiState {
     data object Initialize : UiState
     data class ShowApp(
@@ -15,6 +17,7 @@ internal sealed interface UiState {
         val installCount: String,
         val ratingCount: Int,
         val rating: Float,
+        val dominantColor: Color? = null
     ) : UiState
 }
 

@@ -1,13 +1,12 @@
 package com.example.vkrustore.feature.appDetail.impl
 
-import android.content.Context
-import android.widget.Toast
-import androidx.compose.ui.res.stringArrayResource
+import android.graphics.Bitmap
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.toRoute
+import androidx.palette.graphics.Palette
 import com.example.vkrustore.data.apps.domain.DownloadApkUseCase
 import com.example.vkrustore.data.apps.domain.InstallApkUseCase
 import com.example.vkrustore.data.apps.domain.models.DownloadApkState
@@ -18,14 +17,14 @@ import com.example.vkrustore.feature.appDetail.impl.state.Actions
 import com.example.vkrustore.feature.appDetail.impl.state.AppStatus
 import com.example.vkrustore.feature.appDetail.impl.state.SideEffect
 import com.example.vkrustore.feature.appDetail.impl.state.UiState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 internal class AppDetailViewModel(
@@ -67,6 +66,7 @@ internal class AppDetailViewModel(
         when (action) {
             Actions.NavigateBack -> mutableSideEffect.emit(SideEffect.NavigateBack)
             Actions.Submit -> downloadApk()
+            is Actions.CalcDominantColor -> calcDominantColor(action.bitmap)
         }
     }
 
@@ -77,6 +77,7 @@ internal class AppDetailViewModel(
                     is DownloadApkState.Error -> {
                         mutableSideEffect.emit(SideEffect.ShowToast("Произошла ошибка во время скачивания"))
                     }
+
                     is DownloadApkState.InProgress -> {
                         mutableState.update { currentState ->
                             (currentState as UiState.ShowApp).copy(
@@ -84,6 +85,7 @@ internal class AppDetailViewModel(
                             )
                         }
                     }
+
                     DownloadApkState.Initial -> {}
                     is DownloadApkState.Success -> installApp(it.file)
                 }
@@ -91,13 +93,13 @@ internal class AppDetailViewModel(
         }
     }
 
-
     private suspend fun installApp(file: File) {
         installApkUseCase(file).collect {
             when (it) {
                 is InstallApkState.Error -> {
                     mutableSideEffect.emit(SideEffect.ShowToast("Произошла ошибка во время установки"))
                 }
+
                 InstallApkState.InProgress -> {
                     mutableState.update { currentState ->
                         (currentState as UiState.ShowApp).copy(
@@ -105,6 +107,7 @@ internal class AppDetailViewModel(
                         )
                     }
                 }
+
                 InstallApkState.Initial -> {}
                 InstallApkState.Success -> {
                     mutableState.update { currentState ->
@@ -113,6 +116,21 @@ internal class AppDetailViewModel(
                         )
                     }
                 }
+            }
+        }
+    }
+
+    private suspend fun calcDominantColor(bitmap: Bitmap) {
+        val palette = withContext(Dispatchers.Default) {
+            val bmp = bitmap.copy(Bitmap.Config.ARGB_8888, false)
+            Palette.from(bmp).generate()
+        }
+
+        palette.dominantSwatch?.rgb?.let {
+            mutableState.update { currentState ->
+                (currentState as UiState.ShowApp).copy(
+                    dominantColor = Color(it)
+                )
             }
         }
     }
