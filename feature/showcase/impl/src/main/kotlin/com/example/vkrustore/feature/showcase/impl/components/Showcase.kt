@@ -192,7 +192,7 @@ internal fun Showcase(
                 )
             }
         }
-    )
+    ) {}
 }
 
 @Composable

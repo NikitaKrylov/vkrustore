@@ -1,5 +1,6 @@
 package com.example.vkrustore.uikit.components
 
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -42,13 +43,13 @@ fun TopSearchBar(
     onLeadingClick: (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     onTrailingClick: (() -> Unit)? = null,
+    content: @Composable (ColumnScope.() -> Unit),
 ) {
     SearchBar(
         modifier = modifier
             .fillMaxWidth(),
         expanded = expanded,
         onExpandedChange = onExpandedChange,
-        tonalElevation = 0.dp,
         inputField = {
             SearchBarDefaults.InputField(
                 query = query,
@@ -90,7 +91,7 @@ fun TopSearchBar(
             containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
-
+        content()
     }
 }
 
@@ -104,6 +105,6 @@ fun PreviewTopSearchBar() {
             onSearch = {},
             expanded = true,
             onExpandedChange = {}
-        )
+        ) {}
     }
 }
