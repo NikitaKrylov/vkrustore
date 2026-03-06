@@ -12,14 +12,17 @@ import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -62,6 +65,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -114,31 +118,40 @@ internal fun AppDetail(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.spacedBy(spacing8)
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxSize()
     ) {
-        AppHeader(
-            appIconUrl = state.appIconUrl,
-            appName = state.name,
-            category = state.category,
-            status = state.status,
-            dominantColor = state.dominantColor ?: MaterialTheme.colorScheme.surfaceVariant,
-            onAction = onAction
-        )
+        val screenHeight = maxHeight
 
-        AppDetails(
-            rating = state.rating,
-            ratingCount = state.ratingCount,
-            installCount = state.installCount,
-            apkSize = state.apkSize,
-            ratingAge = state.ratingAge,
-            description = state.description,
-            devName = state.devName,
-            screenshots = state.screenshots
-        )
+        Column(
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(spacing8)
+        ) {
+            AppHeader(
+                appIconUrl = state.appIconUrl,
+                appName = state.name,
+                category = state.category,
+                status = state.status,
+                dominantColor = state.dominantColor ?: MaterialTheme.colorScheme.surfaceVariant,
+                onAction = onAction
+            )
+
+            AppDetails(
+                modifier = Modifier
+                    .heightIn(min = screenHeight)
+                    .fillMaxWidth(),
+                rating = state.rating,
+                ratingCount = state.ratingCount,
+                installCount = state.installCount,
+                apkSize = state.apkSize,
+                ratingAge = state.ratingAge,
+                description = state.description,
+                devName = state.devName,
+                screenshots = state.screenshots
+            )
+        }
     }
 
     TopAppBar(
@@ -215,6 +228,7 @@ internal fun AppHeader(
     category: String,
     status: AppStatus,
     dominantColor: Color,
+    modifier: Modifier = Modifier,
     onAction: (Actions) -> Unit
 ) {
     val defaultDominantColor = MaterialTheme.colorScheme.surfaceVariant
@@ -226,7 +240,7 @@ internal fun AppHeader(
     )
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = BottomBoxShape
@@ -320,7 +334,8 @@ internal fun AppDetails(
     ratingAge: Int,
     description: String,
     devName: String,
-    screenshots: List<String>
+    screenshots: List<String>,
+    modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
     var fullScreenIndex by remember { mutableStateOf<Int?>(null) }
@@ -342,17 +357,17 @@ internal fun AppDetails(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = TopBoxShape
             )
-            .fillMaxSize()
-            .padding(spacing24)
-            .clipToBounds(),
+            .fillMaxSize(),
     ) {
         Column(
-            modifier = Modifier,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(spacing24),
             verticalArrangement = Arrangement.spacedBy(spacing16)
         ) {
             Row(

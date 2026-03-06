@@ -28,6 +28,7 @@ fun ExpandableDescription(
     minLines: Int = 6,
     maxLines: Int = Int.MAX_VALUE
 ) {
+    var isOverflow by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
 
     Column(
@@ -38,21 +39,26 @@ fun ExpandableDescription(
         horizontalAlignment = Alignment.End
     ) {
         Text(
+            modifier = Modifier
+                .fillMaxWidth(),
             text = text,
             maxLines = if (expanded) maxLines else minLines,
             overflow = TextOverflow.Ellipsis,
             style = TextStyles.BodyMedium,
             textAlign = TextAlign.Start,
-            modifier = Modifier
-                .fillMaxWidth()
+            onTextLayout = { layoutResult ->
+                isOverflow = layoutResult.hasVisualOverflow
+            }
         )
 
-        Text(
-            text = if (expanded) "Скрыть" else "Еще",
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .clickable { expanded = !expanded }
-        )
+        if (isOverflow) {
+            Text(
+                text = if (expanded) "Скрыть" else "Еще",
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .clickable { expanded = !expanded }
+            )
+        }
     }
 }
 
@@ -61,7 +67,7 @@ fun ExpandableDescription(
 fun PreviewExpandableDescription() {
     VKRuStoreTheme {
         ExpandableDescription(
-            text = "Lorem ipsum "
+            text = "Lorem ipsum"
         )
     }
 }
