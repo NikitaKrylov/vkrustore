@@ -22,11 +22,10 @@ import com.example.vkrustore.uikit.spacing2
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
 
 @Composable
-fun ExpandableDescription(
+fun ExpandableText(
     text: String,
     modifier: Modifier = Modifier,
-    minLines: Int = 6,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = 6
 ) {
     var isOverflow by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
@@ -42,18 +41,20 @@ fun ExpandableDescription(
             modifier = Modifier
                 .fillMaxWidth(),
             text = text,
-            maxLines = if (expanded) maxLines else minLines,
+            maxLines = Int.MAX_VALUE.takeIf { expanded } ?: maxLines,
             overflow = TextOverflow.Ellipsis,
             style = TextStyles.BodyMedium,
             textAlign = TextAlign.Start,
             onTextLayout = { layoutResult ->
-                isOverflow = layoutResult.hasVisualOverflow
+                if (!expanded) {
+                    isOverflow = layoutResult.hasVisualOverflow
+                }
             }
         )
 
         if (isOverflow) {
             Text(
-                text = if (expanded) "Скрыть" else "Еще",
+                text = "Скрыть".takeIf { expanded } ?: "Еще",
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .clickable { expanded = !expanded }
@@ -64,10 +65,11 @@ fun ExpandableDescription(
 
 @Preview
 @Composable
-fun PreviewExpandableDescription() {
+fun PreviewExpandableText() {
     VKRuStoreTheme {
-        ExpandableDescription(
-            text = "Lorem ipsum"
+        ExpandableText(
+            maxLines = 2,
+            text = "Lorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsum"
         )
     }
 }

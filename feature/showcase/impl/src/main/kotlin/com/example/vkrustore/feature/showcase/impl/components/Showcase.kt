@@ -85,7 +85,7 @@ internal fun Showcase(
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        contentWindowInsets = WindowInsets.systemBars,
+        contentWindowInsets = WindowInsets.statusBars,
         topBar = {
             TopAppBar(
                 modifier = Modifier

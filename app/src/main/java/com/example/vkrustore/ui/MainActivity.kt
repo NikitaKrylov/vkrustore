@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val navTabs = listOf(
                 NavTabItem(
-                    title = "Главная",
+                    title = "Приложения",
                     iconRes = UiKit.drawable.round_android_24,
                     route = ShowcaseRoute,
                 ),
@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     bottomBar = {
                         AnimatedVisibility(
-                            visible = isNavigationBarVisible,
+                            visible = true,
                             label = "Navigation bar visibility",
                             enter = fadeIn() + slideInVertically { it },
                             exit = fadeOut() + slideOutVertically { it },

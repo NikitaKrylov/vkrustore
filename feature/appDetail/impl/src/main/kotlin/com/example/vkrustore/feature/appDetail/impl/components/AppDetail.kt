@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -57,7 +56,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -65,7 +63,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -89,7 +86,7 @@ import com.example.vkrustore.uikit.TopBoxShape
 import com.example.vkrustore.uikit.boxShape
 import com.example.vkrustore.uikit.buttonPaddingValues
 import com.example.vkrustore.uikit.components.AppImageError
-import com.example.vkrustore.uikit.components.ExpandableDescription
+import com.example.vkrustore.uikit.components.ExpandableText
 import com.example.vkrustore.uikit.components.PrimaryButton
 import com.example.vkrustore.uikit.extraSmall
 import com.example.vkrustore.uikit.smallShape
@@ -362,11 +359,11 @@ internal fun AppDetails(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = TopBoxShape
             )
-            .fillMaxSize(),
+            .fillMaxWidth(),
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(spacing24),
             verticalArrangement = Arrangement.spacedBy(spacing16)
         ) {
@@ -415,7 +412,7 @@ internal fun AppDetails(
                 )
             }
 
-            ExpandableDescription(
+            ExpandableText(
                 text = description
             )
 
