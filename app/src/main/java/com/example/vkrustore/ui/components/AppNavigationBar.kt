@@ -1,5 +1,7 @@
 package com.example.vkrustore.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +31,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -59,10 +64,21 @@ fun AppNavigationBar(
     onItemClick: (BaseRoute) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val outlineColor = MaterialTheme.colorScheme.outlineVariant
+
     NavigationBar(
         modifier = modifier
+            .background(MaterialTheme.colorScheme.surface)
             .navigationBarsPadding()
-            .height(68.dp),
+            .height(68.dp)
+            .drawBehind {
+                drawLine(
+                    color = outlineColor,
+                    start = Offset(0f, 0f),
+                    end = Offset(size.width, 0f),
+                    strokeWidth = 1.dp.toPx()
+                )
+            },
         containerColor = Color.Transparent,
         windowInsets = WindowInsets(0)
     ) {

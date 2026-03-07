@@ -3,22 +3,19 @@ package com.example.vkrustore.uikit.components
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.example.vkrustore.uikit.TextStyles
 import com.example.vkrustore.uikit.smallShape
 import com.example.vkrustore.uikit.spacing16
-import com.example.vkrustore.uikit.spacing32
-import com.example.vkrustore.uikit.spacing40
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
 
 
@@ -54,7 +51,11 @@ fun AppButton(
                 shape = shape,
                 contentPadding = contentPadding,
                 modifier = modifier,
-                content = content
+                content = content,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = MaterialTheme.colorScheme.secondary
+                )
             )
         }
     }

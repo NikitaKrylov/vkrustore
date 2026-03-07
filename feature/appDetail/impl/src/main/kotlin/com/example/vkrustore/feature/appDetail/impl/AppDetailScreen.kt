@@ -13,6 +13,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun AppDetailScreen(
     onBack: () -> Unit,
+    showMessage: (String) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -33,9 +34,7 @@ fun AppDetailScreen(
     ObserveAsEvents(viewModel.sideEffect) { effect ->
         when (effect) {
             SideEffect.NavigateBack -> onBack()
-            is SideEffect.ShowToast -> {
-                Toast.makeText(context, effect.message, Toast.LENGTH_LONG).show()
-            }
+            is SideEffect.ShowToast -> showMessage(effect.message)
         }
     }
 }

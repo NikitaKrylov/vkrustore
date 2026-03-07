@@ -228,7 +228,7 @@ internal fun AppHeader(
     modifier: Modifier = Modifier,
     onAction: (Actions) -> Unit
 ) {
-    val defaultDominantColor = MaterialTheme.colorScheme.surfaceVariant
+    val defaultDominantColor = MaterialTheme.colorScheme.surface
     val animatedColor by animateColorAsState(
         dominantColor,
         animationSpec = tween(
@@ -239,7 +239,7 @@ internal fun AppHeader(
     Box(
         modifier = modifier
             .background(
-                color = MaterialTheme.colorScheme.surfaceVariant,
+                color = MaterialTheme.colorScheme.surface,
                 shape = BottomBoxShape
             )
             .fillMaxWidth()
@@ -356,7 +356,7 @@ internal fun AppDetails(
     Box(
         modifier = modifier
             .background(
-                color = MaterialTheme.colorScheme.surfaceVariant,
+                color = MaterialTheme.colorScheme.surface,
                 shape = TopBoxShape
             )
             .fillMaxWidth(),

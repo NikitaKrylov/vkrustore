@@ -88,7 +88,7 @@ fun TopSearchBar(
         },
         shape = RoundedCornerShape(mediumShape),
         colors = SearchBarDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
         content()
