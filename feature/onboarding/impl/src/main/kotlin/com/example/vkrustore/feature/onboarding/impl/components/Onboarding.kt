@@ -148,7 +148,7 @@ internal fun Onboarding(
 
 @Preview
 @Composable
-fun PreviewOnBoarding() {
+private fun PreviewOnBoarding() {
     VKRuStoreTheme {
         Onboarding { }
     }

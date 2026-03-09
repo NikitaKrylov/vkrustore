@@ -1,8 +1,6 @@
 package com.example.vkrustore.feature.appDetail.impl
 
-import android.widget.Toast
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.vkrustore.feature.appDetail.impl.components.AppDetail
 import com.example.vkrustore.feature.appDetail.impl.state.SideEffect
