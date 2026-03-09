@@ -56,7 +56,7 @@ internal class AppDetailViewModel(
                     apkSize = "100мб",
                     installCount = "100 000",
                     ratingCount = 100_000,
-                    rating = 4.5f,
+                    rating = rating ?: 0f,
                 )
             )
         }

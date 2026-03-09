@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -81,7 +82,6 @@ internal fun Showcase(
     val fraction = scrollBehavior.state.collapsedFraction
     val visibleFraction = 1f - fraction.coerceIn(0f, 1f)
     var expanded by remember { mutableStateOf(false) }
-
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -229,9 +229,12 @@ internal fun ShowcaseContent(
                             title = block.title,
                             description = block.description,
                             rating = block.rating?.toString(),
-                            appAction = "Усатновить",
+                            appAction = "Скачать",
                             bannerImageUrl = block.bannerImageUrl,
-                            appImageUrl = block.appImageUrl
+                            appImageUrl = block.appImageUrl,
+                            onItemClick = {
+                                onItemClick(block.id)
+                            }
                         )
 
                     is ShowcaseBlock.AppsGroup ->

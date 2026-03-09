@@ -17,12 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
-import com.example.vkrustore.uikit.boxShape
+import com.example.vkrustore.uikit.largeShape
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
 
 
@@ -37,25 +35,21 @@ fun ExpandedAppCard(
     rating: String? = null,
     bannerHead: String? = null,
     bannerSubhead: String? = null,
+    onItemClick: () -> Unit,
 ) {
-    val shape = RoundedCornerShape(boxShape)
+    val shape = RoundedCornerShape(largeShape)
 
     Box(
         modifier = modifier
             .clip(shape)
             .height(300.dp)
     ) {
-        SubcomposeAsyncImage(
+        AppAsyncImage(
             modifier = Modifier
                 .fillMaxSize(),
             model = bannerImageUrl,
             contentDescription = "app card image",
-            contentScale = ContentScale.Crop,
-            error = {
-                AppImageError(
-                    shape = shape
-                )
-            }
+            shape = shape
         )
 
         Box(
@@ -96,7 +90,7 @@ fun ExpandedAppCard(
                 rating = rating,
                 actionType = appAction,
                 imageUrl = appImageUrl,
-                onClick = {}
+                onClick = onItemClick
             )
         }
     }
@@ -115,7 +109,8 @@ private fun ExpandedAppCardPreview() {
             rating = "5",
             appAction = "action type",
             bannerImageUrl = "",
-            appImageUrl = ""
+            appImageUrl = "",
+            onItemClick = {}
         )
     }
 }

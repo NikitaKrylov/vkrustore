@@ -3,10 +3,11 @@ package com.example.vkrustore.uikit
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 
-val extraSmall = 8.dp
+val extraSmallShape = 8.dp
 val smallShape = 12.dp
-val mediumShape = 20.dp
-val boxShape = 24.dp
+val mediumShape = 16.dp
+val largeShape = 24.dp
+val boxShape = 16.dp
 val skeletonShape = 24.dp
 val buttonShape = 28.dp
 val alertShape = 28.dp
@@ -14,6 +15,8 @@ val chipShape = 28.dp
 val alertInputFieldShape = 18.dp
 val snackbarShape = 28.dp
 
+
 val BoxShape = RoundedCornerShape(boxShape)
 val BottomBoxShape = RoundedCornerShape(bottomStart = boxShape, bottomEnd = boxShape)
 val TopBoxShape = RoundedCornerShape(topStart = boxShape, topEnd = boxShape)
+val IconAppShape = RoundedCornerShape(25)

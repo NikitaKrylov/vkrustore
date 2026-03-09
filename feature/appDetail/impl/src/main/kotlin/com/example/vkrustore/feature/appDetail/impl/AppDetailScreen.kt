@@ -15,8 +15,6 @@ fun AppDetailScreen(
     onBack: () -> Unit,
     showMessage: (String) -> Unit,
 ) {
-    val context = LocalContext.current
-
     val viewModel: AppDetailViewModel = koinViewModel()
     val state = viewModel.state.collectAsStateWithLifecycle().value
 

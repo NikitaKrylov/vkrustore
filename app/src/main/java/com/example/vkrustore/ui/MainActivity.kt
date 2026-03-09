@@ -99,7 +99,7 @@ class MainActivity : ComponentActivity() {
                     },
                     bottomBar = {
                         AnimatedVisibility(
-                            visible = true,
+                            visible = isNavigationBarVisible,
                             label = "Navigation bar visibility",
                             enter = fadeIn() + slideInVertically { it },
                             exit = fadeOut() + slideOutVertically { it },

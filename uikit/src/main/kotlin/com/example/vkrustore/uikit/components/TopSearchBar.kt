@@ -3,6 +3,7 @@ package com.example.vkrustore.uikit.components
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -28,7 +29,9 @@ import androidx.compose.ui.unit.dp
 import com.example.vkrustore.uikit.R
 import com.example.vkrustore.uikit.TextStyles
 import com.example.vkrustore.uikit.mediumShape
+import com.example.vkrustore.uikit.smallShape
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
+import com.example.vkrustore.uikit.topBarHeight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,7 +89,7 @@ fun TopSearchBar(
                 )
             )
         },
-        shape = RoundedCornerShape(mediumShape),
+        shape = RoundedCornerShape(smallShape),
         colors = SearchBarDefaults.colors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         )

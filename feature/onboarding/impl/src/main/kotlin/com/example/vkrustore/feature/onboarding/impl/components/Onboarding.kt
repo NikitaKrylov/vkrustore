@@ -122,14 +122,14 @@ internal fun Onboarding(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(smallShape),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                    containerColor = Color(0xFFE5F1FF)
                 ),
                 contentPadding = buttonPaddingValues,
                 onClick = { onAction(OnboardingAction.Next) },
             ) {
                 Text(
                     text = "Продолжить",
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    color = Color(0xFF1A73E8),
                     style = TextStyles.LabelLarge
                 )
             }

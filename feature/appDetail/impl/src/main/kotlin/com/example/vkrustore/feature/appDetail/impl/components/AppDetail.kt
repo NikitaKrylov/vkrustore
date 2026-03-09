@@ -73,23 +73,21 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
-import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import coil3.toBitmap
 import com.example.vkrustore.feature.appDetail.impl.state.Actions
 import com.example.vkrustore.feature.appDetail.impl.state.AppStatus
 import com.example.vkrustore.feature.appDetail.impl.state.UiState
 import com.example.vkrustore.uikit.BottomBoxShape
+import com.example.vkrustore.uikit.IconAppShape
 import com.example.vkrustore.uikit.R
 import com.example.vkrustore.uikit.TextStyles
 import com.example.vkrustore.uikit.TopBoxShape
-import com.example.vkrustore.uikit.boxShape
 import com.example.vkrustore.uikit.buttonPaddingValues
-import com.example.vkrustore.uikit.components.AppImageError
+import com.example.vkrustore.uikit.components.AppAsyncImage
 import com.example.vkrustore.uikit.components.ExpandableText
 import com.example.vkrustore.uikit.components.PrimaryButton
-import com.example.vkrustore.uikit.extraSmall
-import com.example.vkrustore.uikit.smallShape
+import com.example.vkrustore.uikit.extraSmallShape
 import com.example.vkrustore.uikit.spacing12
 import com.example.vkrustore.uikit.spacing16
 import com.example.vkrustore.uikit.spacing24
@@ -192,17 +190,12 @@ internal fun AppDetail(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(spacing8)
             ) {
-                SubcomposeAsyncImage(
+                AppAsyncImage(
                     modifier = Modifier
                         .size(42.dp),
                     model = state.appIconUrl,
                     contentDescription = "app card image",
-                    contentScale = ContentScale.Crop,
-                    error = {
-                        AppImageError(
-                            shape = RoundedCornerShape(smallShape)
-                        )
-                    }
+                    shape = IconAppShape
                 )
 
                 Text(
@@ -232,7 +225,7 @@ internal fun AppHeader(
     val animatedColor by animateColorAsState(
         dominantColor,
         animationSpec = tween(
-            durationMillis = 2000
+            durationMillis = 3000
         )
     )
 
@@ -251,7 +244,7 @@ internal fun AppHeader(
                 .height(140.dp)
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(animatedColor.copy(alpha = 0.25f), defaultDominantColor)
+                        colors = listOf(animatedColor.copy(alpha = 0.2f), defaultDominantColor)
                     )
                 )
         )
@@ -263,21 +256,16 @@ internal fun AppHeader(
                 .padding(spacing24),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SubcomposeAsyncImage(
+            AppAsyncImage(
                 modifier = Modifier
                     .size(84.dp),
                 model = appIconUrl,
                 contentDescription = "app card image",
-                contentScale = ContentScale.Crop,
                 onSuccess = {
                     val img = it.result.image.toBitmap()
                     onAction(Actions.CalcDominantColor(img))
                 },
-                error = {
-                    AppImageError(
-                        shape = RoundedCornerShape(boxShape)
-                    )
-                }
+                shape = IconAppShape
             )
 
             Spacer(Modifier.height(spacing16))
@@ -447,7 +435,7 @@ fun ScreenshotsRow(
                 modifier = Modifier
                     .height(fixedHeight)
                     .aspectRatio(aspectRatio)
-                    .clip(RoundedCornerShape(extraSmall))
+                    .clip(RoundedCornerShape(extraSmallShape))
                     .clickable { onClick(index) },
                 contentScale = ContentScale.Crop
             )
@@ -540,7 +528,7 @@ fun ScreenshotsFullScreen(
                             modifier = Modifier
                                 .height(thumbnailHeight)
                                 .aspectRatio(aspectRatio)
-                                .clip(RoundedCornerShape(extraSmall))
+                                .clip(RoundedCornerShape(extraSmallShape))
                                 .clickable {
                                     coroutineScope.launch {
                                         pagerState.animateScrollToPage(index)
