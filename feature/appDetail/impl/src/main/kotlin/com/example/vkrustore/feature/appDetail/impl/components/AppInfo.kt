@@ -5,6 +5,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,7 +40,7 @@ import com.example.vkrustore.uikit.spacing12
 import com.example.vkrustore.uikit.spacing16
 import com.example.vkrustore.uikit.spacing24
 import com.example.vkrustore.uikit.spacing4
-import com.example.vkrustore.uikit.utils.extentions.ignoreHorizontalParentPadding
+import com.example.vkrustore.uikit.utils.extentions.extendContentIntoHorizontalPadding
 import kotlinx.coroutines.launch
 
 @Composable
@@ -89,9 +90,10 @@ fun AppInfo(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .ignoreHorizontalParentPadding(spacing24)
-                    .horizontalScroll(rememberScrollState()),
+                    .extendContentIntoHorizontalPadding(spacing24)
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = spacing24)
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(spacing12)
             ) {
                 InfoColumnItem(
@@ -115,7 +117,9 @@ fun AppInfo(
 
             ScreenshotsRow(
                 modifier = Modifier
-                    .ignoreHorizontalParentPadding(spacing24),
+                    .extendContentIntoHorizontalPadding(spacing24)
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = spacing24),
                 screenshotsUrl = screenshots,
                 onClick = { index ->
                     fullScreenIndex = index

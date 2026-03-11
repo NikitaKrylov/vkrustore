@@ -4,16 +4,20 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.animateScrollBy
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -24,20 +28,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -49,6 +46,8 @@ import com.example.vkrustore.uikit.extraSmallShape
 import com.example.vkrustore.uikit.spacing32
 import com.example.vkrustore.uikit.spacing48
 import kotlinx.coroutines.launch
+import net.engawapg.lib.zoomable.rememberZoomState
+import net.engawapg.lib.zoomable.zoomable
 
 @Composable
 fun ScreenshotsFullScreen(
@@ -68,7 +67,6 @@ fun ScreenshotsFullScreen(
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }
             .collect { page ->
-
                 val layoutInfo = thumbnailsListState.layoutInfo
                 val visibleItem = layoutInfo.visibleItemsInfo
                     .firstOrNull { it.index == page }
@@ -87,69 +85,88 @@ fun ScreenshotsFullScreen(
 
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false
+        )
     ) {
         Box(
             modifier = Modifier
                 .background(Color.Black)
                 .fillMaxSize()
         ) {
-            HorizontalPager(
-                modifier = Modifier,
-                state = pagerState,
-                pageSpacing = spacing48
-            ) { page ->
-                ZoomableImage(
-                    imageUrl = screenshotsUrl[page]
-                )
-            }
-
-            IconButton(
-                onClick = onDismiss,
+            Column(
                 modifier = Modifier
-                    .align(Alignment.TopStart)
+                    .systemBarsPadding()
+                    .background(Color.Black)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.baseline_arrow_back_24),
-                    contentDescription = "back"
-                )
-            }
-
-            LazyRow(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = spacing32),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                state = thumbnailsListState
-            ) {
-                itemsIndexed(screenshotsUrl) { index, url ->
-                    val isSelected = pagerState.currentPage == index
-
-                    Box(
+                Row(
+                    modifier = Modifier
+                        .background(Color.Black)
+                        .fillMaxWidth(),
+                ) {
+                    IconButton(
+                        onClick = onDismiss,
                         modifier = Modifier
                     ) {
-                        AsyncImage(
-                            model = url,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .height(thumbnailHeight)
-                                .aspectRatio(aspectRatio)
-                                .clip(RoundedCornerShape(extraSmallShape))
-                                .clickable {
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(index)
-                                    }
-                                },
-                            contentScale = ContentScale.Crop
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_arrow_back_24),
+                            contentDescription = "back",
+                            tint = Color.White
                         )
+                    }
+                }
 
-                        if (!isSelected) {
-                            Box(
-                                Modifier
-                                    .matchParentSize()
-                                    .background(Color.Black.copy(alpha = 0.5f))
+                HorizontalPager(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clipToBounds(),
+                    state = pagerState,
+                    pageSpacing = spacing48
+                ) { page ->
+                    ZoomableImage(
+                        imageUrl = screenshotsUrl[page]
+                    )
+                }
+
+                LazyRow(
+                    modifier = Modifier
+                        .padding(vertical = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    state = thumbnailsListState
+                ) {
+                    itemsIndexed(screenshotsUrl) { index, url ->
+                        val isSelected = pagerState.currentPage == index
+
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(extraSmallShape))
+                        ) {
+                            AsyncImage(
+                                model = url,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .height(thumbnailHeight)
+                                    .aspectRatio(aspectRatio)
+                                    .clickable {
+                                        coroutineScope.launch {
+                                            pagerState.animateScrollToPage(index)
+                                        }
+                                    },
+                                contentScale = ContentScale.Crop
                             )
+
+                            if (!isSelected) {
+                                Box(
+                                    Modifier
+                                        .matchParentSize()
+                                        .background(Color.Black.copy(alpha = 0.5f))
+                                )
+                            }
                         }
                     }
                 }
@@ -163,58 +180,29 @@ fun ScreenshotsFullScreen(
 private fun ZoomableImage(
     imageUrl: String
 ) {
-    var scale by remember { mutableFloatStateOf(1f) }
-    var offset by remember { mutableStateOf(Offset.Zero) }
-    val minScale = 1f
-    val maxScale = 4f
+    val zoomState = rememberZoomState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onDoubleTap = {
-                        if (scale > 1f) {
-                            scale = 1f
-                            offset = Offset.Zero
-                        } else {
-                            scale = 2f
-                        }
-                    }
-                )
-            }
-            .then(
-                Modifier.pointerInput(Unit) {
-                    detectDragGestures { change, dragAmount ->
-                        offset += dragAmount
-                        change.consume()
-                    }
-                }.takeIf { scale > 1f } ?: Modifier
-            )
-            .then(
-                Modifier.pointerInput(Unit) {
-                    detectTransformGestures(
-                        onGesture = { centroid, pan, zoom, rotation ->
-                            scale = (scale * zoom).coerceIn(minScale, maxScale)
-                            if (scale <= 1f) offset = Offset.Zero
-                        }
-                    )
-                }.takeIf { scale > 1f } ?: Modifier
-            )
     ) {
         AsyncImage(
             model = imageUrl,
             contentDescription = null,
             modifier = Modifier
-                .fillMaxSize()
-                .graphicsLayer {
-                    scaleX = scale
-                    scaleY = scale
-                    translationX = offset.x
-                    translationY = offset.y
-                },
-            contentScale = ContentScale.Fit
+                .align(Alignment.Center)
+                .zoomable(
+                    zoomState = zoomState,
+                    onDoubleTap = { position ->
+                        val targetScale = 1f.takeIf { zoomState.scale > 1f } ?: 2f
+                        zoomState.changeScale(targetScale, position)
+                    }
+                ),
+            contentScale = ContentScale.Fit,
+            onSuccess = { state ->
+                zoomState.setContentSize(state.painter.intrinsicSize)
+            }
         )
     }
 }

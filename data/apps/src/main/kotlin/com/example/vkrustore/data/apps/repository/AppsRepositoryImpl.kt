@@ -113,6 +113,13 @@ internal class AppsRepositoryImpl : AppsRepository {
                 description = "some description",
                 apkSourceUrl = "https://fs389.tbx.su/files10/2436744_6b469a/com.pinterest-14058020.apk",
                 appIconUrl = "https://trashbox.ru/apk_icons/topic_67045_256.png?1771754237",
+                screens = listOf(
+                    "https://trashbox.ru/ifiles2/1914796_c78f5e_screen-0.webp.png-orig.jpg/twinby-android-7.webp",
+                    "https://trashbox.ru/ifiles2/1914797_c056f9_screen-1.webp.png-orig.jpg/twinby-android-8.webp",
+                    "https://trashbox.ru/ifiles2/1914798_764ee0_screen-2.webp.png-orig.jpg/twinby-android-9.webp",
+                    "https://trashbox.ru/ifiles2/1914798_764ee0_screen-2.webp.png-orig.jpg/twinby-android-9.webp",
+                    "https://trashbox.ru/ifiles2/1914798_764ee0_screen-2.webp.png-orig.jpg/twinby-android-9.webp",
+                ),
                 bannerImageUrl = null,
             ),
             ApplicationBusiness(

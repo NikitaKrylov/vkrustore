@@ -15,22 +15,22 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.vkrustore.uikit.extraSmallShape
-import com.example.vkrustore.uikit.spacing12
-import com.example.vkrustore.uikit.spacing16
+import com.example.vkrustore.uikit.spacing8
 
 @Composable
 fun ScreenshotsRow(
     screenshotsUrl: List<String>,
     onClick: (Int) -> Unit,
     aspectRatio: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val fixedHeight = 180.dp
 
     LazyRow(
         modifier = modifier,
-        contentPadding = PaddingValues(horizontal = spacing16),
-        horizontalArrangement = Arrangement.spacedBy(spacing12)
+        contentPadding = contentPadding,
+        horizontalArrangement = Arrangement.spacedBy(spacing8)
     ) {
         itemsIndexed(screenshotsUrl) { index, url ->
             AsyncImage(
