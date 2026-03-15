@@ -108,7 +108,7 @@ fun AppNavigationBar(
 }
 
 @Composable
-fun RowScope.CompactNavItem(
+private fun RowScope.CompactNavItem(
     selected: Boolean,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
