@@ -8,76 +8,82 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val RuStoreDarkColorScheme = darkColorScheme(
-    primary = Color(0xFF2993FF),                // core-accent-blue250
-    onPrimary = Color(0xFFEBF1F6),              // core-text-base90 (светлый на акцент)
-    primaryContainer = Color(0xFF1A73E8),       // более тёмный акцент контейнера
+    primary = Color(0xFF0072E5),
+    onPrimary = Color(0xFFEBF1F6),
+    primaryContainer = Color(0xFF1A73E8),
     onPrimaryContainer = Color(0xFFE5F1FF),
 
-    secondary = Color(0xFF8AB4F8),              // core-surface-accent
+    secondary = Color(0xFF2F90ED),
     onSecondary = Color(0xFF0D1B2A),
-    secondaryContainer = Color(0xFF252932),     // тёмный вторичный контейнер
-    onSecondaryContainer = Color(0xFF3681C1),
+    secondaryContainer = Color(0xFF132E4B),
+    onSecondaryContainer = Color(0xFF2F90ED),
 
-    tertiary = Color(0xFF4BB34B),               // позитивный светлый акцент
+    tertiary = Color(0xFF4BB34B),
     onTertiary = Color(0xFF000000),
-    tertiaryContainer = Color(0xFF336B33),      // тёмный позитивный контейнер
+    tertiaryContainer = Color(0xFF336B33),
     onTertiaryContainer = Color(0xFFFFFFFF),
 
-    background = Color(0xFF0F1419),             // core-surface-level05
-    onBackground = Color(0xFFE8EAED),           // core-text-base90
+    background = Color(0xFF0E1116),
+    onBackground = Color(0xFFE8EAED),
 
-    surface = Color(0xFF232a32),                // core-surface-primary-dark
-    onSurface = Color(0xFFE8EAED),
+    surface = Color(0xFF171C22),
+    onSurface = Color(0xFFD2D7DD),
 
-    surfaceVariant = Color(0xFF24282E),         // core-surface-level20
-    onSurfaceVariant = Color(0xFF9AA0A6),       // core-text-secondary-dark
+    surfaceContainer = Color(0xFF171C22),
 
-    outline = Color(0xFF3C4043),                // core-text-tertiary (тёмный)
+    surfaceVariant = Color(0xFF24282E),
+    onSurfaceVariant = Color(0xFF9AA0A6),
 
-    error = Color(0xFFFF3347),                  // core-surface-negative
+    outline = Color(0xFF3C4043),
+    outlineVariant = Color(0xFF21262C),
+
+    error = Color(0xFFFF3347),
     onError = Color(0xFFFFFFFF),
     errorContainer = Color(0xFF93000F),
     onErrorContainer = Color(0xFFFFFFFF),
 
-    inverseSurface = Color(0xFFFFFFFF),
-    inverseOnSurface = Color(0xFF1A1C20),
+    inverseSurface = Color(0xFF343844),
+    inverseOnSurface = Color(0xFFEAEFF1),
 
-    inversePrimary = Color(0xFF6699FF)          // нейтральный контрастный акцент
+    inversePrimary = Color(0xFF6699FF)
 )
 private val RuStoreLightColorScheme = lightColorScheme(
-    primary = Color(0xFF0072E5),                // core-accent-blue250
+    primary = Color(0xFF0077FF),
     onPrimary = Color(0xFFFFFFFF),
-    primaryContainer = Color(0xFFE5F1FF),       // core-surface-accentSubdued
+    primaryContainer = Color(0xFFE5F1FF),
     onPrimaryContainer = Color(0xFF1A73E8),
 
-    secondary = Color(0xFF1A73E8),              // core-surface-accent
+    secondary = Color(0xFF1871DD),
     onSecondary = Color(0xFFFFFFFF),
-    secondaryContainer = Color(0xFFF1F3F4),
-    onSecondaryContainer = Color(0xFF1D76D2),   // более тёмный акцент
+    secondaryContainer = Color(0xFFC9E2FF),
+    onSecondaryContainer = Color(0xFF1871DD),
 
-    tertiary = Color(0xFF4BB34B),               // core-surface-positive
+    tertiary = Color(0xFF4BB34B),
     onTertiary = Color(0xFFFFFFFF),
-    tertiaryContainer = Color(0xFFE4F4E4),      // core-surface-positiveSubdued
+    tertiaryContainer = Color(0xFFE4F4E4),
     onTertiaryContainer = Color(0xFF246B24),
 
-    background = Color(0xFFFFFFFF),             // background-primary
-    onBackground = Color(0xFF1F1F1F),           // core-text-primary
+    background = Color(0xFFF2F3F5),
+    onBackground = Color(0xFF1F1F1F),
 
-    surface = Color(0xFFF6F5F5),                // core-surface-primary
-    onSurface = Color(0xFF2d2e32),
+    surface = Color(0xFFFFFFFF),
+    onSurface = Color(0xFF1F2022),
 
-    surfaceVariant = Color(0xFFF1F3F4),         // core-surface-secondary
-    onSurfaceVariant = Color(0xFF5F6368),       // core-text-secondary
+    surfaceContainer = Color(0xFFffffff),
 
-    outline = Color(0xFF99A2AD),                // core-text-tertiary
+    surfaceVariant = Color(0xFFF1F3F4),
+    onSurfaceVariant = Color(0xFF686B70),
 
-    error = Color(0xFFFF3347),                  // core-surface-negative
+    outline = Color(0xFF99A2AD),
+    outlineVariant = Color(0xFFF5F5F5),
+
+    error = Color(0xFFFF3347),
     onError = Color(0xFFFFFFFF),
-    errorContainer = Color(0xFFFAEBEB),         // core-surface-negativeSubdued
+    errorContainer = Color(0xFFFAEBEB),
     onErrorContainer = Color(0xFF93000F),
 
-    inverseSurface = Color(0xFF1F1F1F),         // core-surface-primary-dark
-    inverseOnSurface = Color(0xFFFFFFFF),        // core-text-base90 / dark text on inverseSurface
+    inverseSurface = Color(0xFF2B313A),
+    inverseOnSurface = Color(0xFFF3F7F8),
     inversePrimary = Color(0xFF8AB4F8)
 )
 private val LightColorScheme = RuStoreLightColorScheme

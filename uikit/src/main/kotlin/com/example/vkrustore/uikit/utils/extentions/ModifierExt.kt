@@ -7,14 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -241,12 +235,17 @@ fun Modifier.scaledSize(size: Dp): Modifier = composed {
 // Source - https://stackoverflow.com/a/71939281
 // Posted by user1185087, modified by community. See post 'Timeline' for change history
 // Retrieved 2026-02-26, License - CC BY-SA 4.0
-fun Modifier.ignoreHorizontalParentPadding(horizontal: Dp): Modifier {
+fun Modifier.extendContentIntoHorizontalPadding(horizontal: Dp): Modifier {
     return this.layout { measurable, constraints ->
-        val overridenWidth = constraints.maxWidth + 2 * horizontal.roundToPx()
-        val placeable = measurable.measure(constraints.copy(maxWidth = overridenWidth))
-        layout(placeable.width, placeable.height) {
-            placeable.place(0, 0)
+        val paddingPx = horizontal.roundToPx()
+        val overridenWidth = constraints.maxWidth + 2 * paddingPx
+
+        val placeable = measurable.measure(
+            constraints.copy(maxWidth = overridenWidth)
+        )
+
+        layout(constraints.maxWidth, placeable.height) {
+            placeable.place(-paddingPx, 0)
         }
     }
 }

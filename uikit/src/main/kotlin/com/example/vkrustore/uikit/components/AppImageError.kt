@@ -1,21 +1,21 @@
 package com.example.vkrustore.uikit.components
 
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.vkrustore.uikit.mediumShape
+import com.example.vkrustore.uikit.IconAppShape
 
 @Composable
 fun AppImageError(
     modifier: Modifier = Modifier,
-    shape: Shape = RoundedCornerShape(mediumShape),
+    shape: Shape = IconAppShape,
     borderWidth: Dp = 1.dp
 ) {
     Box(
@@ -24,6 +24,7 @@ fun AppImageError(
                 color = MaterialTheme.colorScheme.surface,
                 shape = shape
             )
+            .clip(shape)
             .border(
                 width = borderWidth,
                 color = MaterialTheme.colorScheme.outline,

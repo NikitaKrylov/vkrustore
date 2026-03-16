@@ -1,48 +1,34 @@
 package com.example.vkrustore.feature.showcase.impl.components
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.vkrustore.feature.common.models.AppPreview
@@ -52,14 +38,8 @@ import com.example.vkrustore.feature.showcase.impl.state.MainShowcaseState
 import com.example.vkrustore.feature.showcase.impl.state.SearchState
 import com.example.vkrustore.feature.showcase.impl.state.ShowcaseState
 import com.example.vkrustore.uikit.R
-import com.example.vkrustore.uikit.TextStyles
 import com.example.vkrustore.uikit.components.ErrorBox
-import com.example.vkrustore.uikit.components.ExpandedAppCard
-import com.example.vkrustore.uikit.components.HorizontalAppCard
 import com.example.vkrustore.uikit.components.TopSearchBar
-import com.example.vkrustore.uikit.spacing12
-import com.example.vkrustore.uikit.spacing16
-import com.example.vkrustore.uikit.spacing2
 import com.example.vkrustore.uikit.spacing8
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
 
@@ -71,270 +51,142 @@ internal fun Showcase(
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val listState = rememberLazyListState()
-
     val searchState = state.searchState
     val showcaseState = state.showcaseState
-    val searchQuery = rememberTextFieldState(searchState.query)
-    val isSearchEmpty by remember(searchQuery.text) {
-        derivedStateOf { searchQuery.text.isBlank() }
-    }
-    val fraction = scrollBehavior.state.collapsedFraction
-    val visibleFraction = 1f - fraction.coerceIn(0f, 1f)
-    var expanded by remember { mutableStateOf(false) }
 
-
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        contentWindowInsets = WindowInsets.systemBars,
-        topBar = {
-            TopAppBar(
-                modifier = Modifier
-                    .padding(bottom = spacing8),
-                windowInsets = WindowInsets.statusBars,
-                scrollBehavior = scrollBehavior,
-                title = {},
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = Color.Transparent
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentWindowInsets = WindowInsets(0),
+            topBar = {
+                TopAppBar(
+                    title = {},
+                    windowInsets = WindowInsets.statusBars,
+                    scrollBehavior = scrollBehavior,
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent,
+                        scrolledContainerColor = Color.Transparent
+                    )
                 )
-            )
-        }
-    ) { innerPaddings ->
-        Box(Modifier.padding(innerPaddings)) {
-            when (showcaseState) {
-                ShowcaseState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(120.dp)
-                        )
-                    }
-                }
-
-                is ShowcaseState.Error ->
-                    ErrorBox(
-                        description = showcaseState.message,
-                        icon = {
-                            Icon(
-                                painter = painterResource(R.drawable.geometric),
-                                contentDescription = null,
-                                modifier = Modifier.size(140.dp),
-                                tint = MaterialTheme.colorScheme.primary
+            }
+        ) { innerPadding ->
+            Box(Modifier.padding(innerPadding)) {
+                when (showcaseState) {
+                    ShowcaseState.Loading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(120.dp)
                             )
                         }
-                    )
+                    }
 
-                is ShowcaseState.Show ->
-                    ShowcaseContent(
-                        listState = listState,
-                        blocks = showcaseState.blocks,
-                        isRefreshing = showcaseState.isRefreshing,
-                        onItemClick = { id ->
-                            onAction(ShowcaseAction.OnAppClick(id))
-                        }
-                    )
+                    is ShowcaseState.Error ->
+                        ErrorBox(
+                            description = showcaseState.message,
+                            icon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.geometric),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(140.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        )
+
+                    is ShowcaseState.Show ->
+                        ShowcaseContent(
+                            listState = listState,
+                            blocks = showcaseState.blocks,
+                            isRefreshing = showcaseState.isRefreshing,
+                            onItemClick = { id ->
+                                onAction(ShowcaseAction.OnAppClick(id))
+                            }
+                        )
+                }
             }
         }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .statusBarsPadding()
+                .clipToBounds()
+                .padding(bottom = spacing8)
+                .graphicsLayer {
+                    translationY = scrollBehavior.state.heightOffset
+                }
+        ) {
+            SearchBar(
+                searchState = searchState,
+                onAction = onAction
+            )
+        }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SearchBar(
+    searchState: SearchState,
+    onAction: (ShowcaseAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var query by remember(searchState.query) {
+        mutableStateOf(searchState.query)
+    }
+    val isSearchEmpty = query.isBlank()
+    var expanded by remember { mutableStateOf(false) }
 
     TopSearchBar(
-        modifier = Modifier
-            .padding(horizontal = 0.dp.takeIf { expanded } ?: spacing16)
-            .graphicsLayer {
-                clip = true
-                scaleY = visibleFraction
-                alpha = visibleFraction
-                transformOrigin = TransformOrigin(0.5f, 0.4f)
-            },
+        modifier = modifier,
         expanded = expanded,
         onExpandedChange = { expanded = it },
-        query = searchQuery.text.toString(),
+        query = query,
         onQueryChange = {
-            searchQuery.edit { replace(0, length, it) }
+            query = it
         },
         onSearch = {
             onAction(ShowcaseAction.OnSearch(it))
             expanded = false
         },
-        onLeadingClick = {
-            onAction(ShowcaseAction.OnSearch(searchQuery.text.toString()))
-        },
-        onTrailingClick = {
-            if (isSearchEmpty) {
-                // speech to text
-            } else {
-                searchQuery.edit { replace(0, length, "") }
-                onAction(ShowcaseAction.OnClearSearch)
-            }
-        },
         leadingIcon = {
-            Icon(
-                painter = painterResource(R.drawable.baseline_search_24),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                contentDescription = "search"
-            )
+            IconButton(onClick = { onAction(ShowcaseAction.OnSearch(query)) }) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_search_24),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    contentDescription = "search"
+                )
+            }
         },
         trailingIcon = {
-            if (isSearchEmpty) {
-                Icon(
-                    painter = painterResource(R.drawable.baseline_mic_none_24),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    contentDescription = "voice input"
-                )
-            } else {
-                Icon(
-                    painter = painterResource(R.drawable.cancel),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    contentDescription = "clear the input"
-                )
-            }
-        }
-    )
-}
-
-@Composable
-internal fun ShowcaseContent(
-    listState: LazyListState,
-    blocks: List<ShowcaseBlock>,
-    isRefreshing: Boolean = false,
-    onItemClick: (String) -> Unit,
-) {
-    PullToRefreshBox(
-        modifier = Modifier.fillMaxSize(),
-        state = rememberPullToRefreshState(),
-        isRefreshing = isRefreshing,
-        onRefresh = { }
-    ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(spacing8),
-            state = listState
-        ) {
-            items(
-                items = blocks
-            ) { block ->
-                when (block) {
-                    is ShowcaseBlock.ExpandedApp ->
-                        ExpandedAppCard(
-                            modifier = Modifier
-                                .padding(horizontal = spacing16)
-                                .padding(bottom = spacing8),
-                            bannerHead = block.head,
-                            bannerSubhead = block.subhead,
-                            title = block.title,
-                            description = block.description,
-                            rating = block.rating?.toString(),
-                            appAction = "Усатновить",
-                            bannerImageUrl = block.bannerImageUrl,
-                            appImageUrl = block.appImageUrl
-                        )
-
-                    is ShowcaseBlock.AppsGroup ->
-                        VerticalAppsGroup(
-                            title = block.title,
-                            subtitle = block.subtitle,
-                            groupApp = block.apps,
-                            onItemClick = onItemClick,
-                        )
+            IconButton(
+                onClick = {
+                    if (isSearchEmpty) {
+                        // speech to text
+                    } else {
+                        query = ""
+                        onAction(ShowcaseAction.OnClearSearch)
+                    }
                 }
-            }
-        }
-    }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun VerticalAppsGroup(
-    title: String,
-    groupApp: List<AppPreview>,
-    modifier: Modifier = Modifier,
-    subtitle: String? = null,
-    onItemClick: (String) -> Unit,
-) {
-    val pages = remember(groupApp) {
-        groupApp.chunked(3)
-    }
-
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = spacing16)
-        ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(spacing2)
             ) {
-                Text(
-                    text = title,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = TextStyles.TitleMedium
-                )
-
-                subtitle?.let {
-                    Text(
-                        text = it,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = TextStyles.LabelLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
-
-        HorizontalAppsPager(
-            pages = pages,
-            onItemClick = onItemClick,
-        )
-    }
-}
-
-
-@Composable
-fun HorizontalAppsPager(
-    pages: List<List<AppPreview>>,
-    modifier: Modifier = Modifier,
-    onItemClick: (String) -> Unit,
-) {
-    val pagerState = rememberPagerState { pages.size }
-
-    HorizontalPager(
-        state = pagerState,
-        userScrollEnabled = true,
-        pageSpacing = spacing8,
-        contentPadding = PaddingValues(horizontal = spacing16, vertical = spacing8),
-        key = { it },
-        modifier = modifier
-            .fillMaxWidth()
-    ) { index ->
-        val apps = pages[index]
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(spacing12),
-        ) {
-            apps.forEach { item ->
-                HorizontalAppCard(
-                    title = item.title,
-                    description = item.description,
-                    rating = item.rating?.toString(),
-                    actionType = "Скачать",
-                    onClick = {
-                        onItemClick(item.id)
-                    },
-                    imageUrl = item.imageUrl
+                val iconRes = if (isSearchEmpty) R.drawable.baseline_mic_none_24 else R.drawable.cancel
+                Icon(
+                    painter = painterResource(iconRes),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    contentDescription = if (isSearchEmpty) "voice input" else "clear the input"
                 )
             }
         }
-    }
+    ) {}
 }
-
 
 @Preview(showBackground = true)
 @Composable

@@ -13,8 +13,11 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
@@ -40,6 +43,7 @@ import com.example.vkrustore.feature.showcase.impl.ShowcaseScreen
 import com.example.vkrustore.ui.components.AppNavigationBar
 import com.example.vkrustore.ui.components.NavTabItem
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import com.example.vkrustore.uikit.R as UiKit
 
@@ -53,7 +57,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val navTabs = listOf(
                 NavTabItem(
-                    title = "Главная",
+                    title = "Приложения",
                     iconRes = UiKit.drawable.round_android_24,
                     route = ShowcaseRoute,
                 ),
@@ -82,11 +86,17 @@ class MainActivity : ComponentActivity() {
                 selectedRoute in navTabs.map(NavTabItem::route)
             }
 
+            val snackbarHostState = remember { SnackbarHostState() }
+            val scope = rememberCoroutineScope()
+
             VKRuStoreTheme {
                 Scaffold(
                     contentWindowInsets = WindowInsets(0),
                     modifier = Modifier
                         .fillMaxSize(),
+                    snackbarHost = {
+                        SnackbarHost(snackbarHostState)
+                    },
                     bottomBar = {
                         AnimatedVisibility(
                             visible = isNavigationBarVisible,
@@ -142,6 +152,11 @@ class MainActivity : ComponentActivity() {
                         composable<AppDetailRoute> {
                             AppDetailScreen(
                                 onBack = navController::popBackStack,
+                                showMessage = { message ->
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(message)
+                                    }
+                                }
                             )
                         }
                     }

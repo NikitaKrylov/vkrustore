@@ -33,4 +33,4 @@ val buttonPaddingValues = PaddingValues(
     bottom = spacing16
 )
 
-val topBarHeight = 56.dp
+val topBarHeight = 50.dp
