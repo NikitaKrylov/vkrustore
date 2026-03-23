@@ -51,12 +51,7 @@ fun NavGraphBuilder.addShowcaseGraph(
             )
         }
 
-        composable<AppDetailRoute> {
-            AppDetailScreen(
-                onBack = navController::popBackStack,
-                showMessage = {}
-            )
-        }
+        appDetailScreen(navController)
     }
 }
 
@@ -68,13 +63,6 @@ fun NavGraphBuilder.addSearchGraph(
     ) {
         composable<SearchRoute> {
             SearchScreen()
-        }
-
-        composable<AppDetailRoute> {
-            AppDetailScreen(
-                onBack = navController::popBackStack,
-                showMessage = {}
-            )
         }
     }
 }
@@ -88,5 +76,14 @@ fun NavGraphBuilder.addCategoriesGraph(
         composable<CategoriesRoute> {
             CategoriesScreen()
         }
+    }
+}
+
+fun NavGraphBuilder.appDetailScreen(navController: NavController) {
+    composable<AppDetailRoute> {
+        AppDetailScreen(
+            onBack = { navController.popBackStack() },
+            showMessage = {}
+        )
     }
 }
