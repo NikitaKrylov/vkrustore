@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -34,6 +35,8 @@ import com.example.vkrustore.feature.search.api.SearchRoute
 import com.example.vkrustore.feature.showcase.api.ShowcaseRoute
 import com.example.vkrustore.ui.components.AppNavigationBar
 import com.example.vkrustore.ui.components.NavTabItem
+import com.example.vkrustore.ui.navigation.CategoriesGraph
+import com.example.vkrustore.ui.navigation.SearchGraph
 import com.example.vkrustore.ui.navigation.addCategoriesGraph
 import com.example.vkrustore.ui.navigation.addOnboardingGraph
 import com.example.vkrustore.ui.navigation.addSearchGraph
@@ -54,35 +57,20 @@ class MainActivity : ComponentActivity() {
                 NavTabItem(
                     title = "Приложения",
                     iconRes = UiKit.drawable.round_android_24,
-                    route = ShowcaseRoute,
+                    route = ShowcaseGraph,
                 ),
                 NavTabItem(
                     title = "Поиск",
                     iconRes = UiKit.drawable.baseline_search_24,
-                    route = SearchRoute,
+                    route = SearchGraph,
                 ),
                 NavTabItem(
                     title = "Категории",
                     iconRes = UiKit.drawable.baseline_star_24,
-                    route = CategoriesRoute,
+                    route = CategoriesGraph,
                 )
             )
-
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentDestination = navBackStackEntry?.destination
-            val selectedRoute = remember(currentDestination) {
-                navTabs
-                    .map(NavTabItem::route)
-                    .firstOrNull { route ->
-                        currentDestination?.hasRoute(route::class) == true
-                    }
-            }
-            val isNavigationBarVisible = remember(selectedRoute) {
-                selectedRoute in navTabs.map(NavTabItem::route)
-            }
-
             val snackbarHostState = remember { SnackbarHostState() }
-            val scope = rememberCoroutineScope()
 
             VKRuStoreTheme {
                 Scaffold(
@@ -93,20 +81,7 @@ class MainActivity : ComponentActivity() {
                         SnackbarHost(snackbarHostState)
                     },
                     bottomBar = {
-                        AnimatedVisibility(
-                            visible = isNavigationBarVisible,
-                            label = "Navigation bar visibility",
-                            enter = fadeIn() + slideInVertically { it },
-                            exit = fadeOut() + slideOutVertically { it },
-                        ) {
-                            AppNavigationBar(
-                                tabs = navTabs,
-                                selectedRoute = selectedRoute,
-                                onItemClick = { route ->
-                                    navController.navigateNewTask(route, route)
-                                },
-                            )
-                        }
+                        AppNavigationBar(navTabs, navController)
                     }
                 ) { innerPadding ->
                     val isOnboarding = storage.get<Boolean>(StorageKeys.IsOnboarded) ?: true

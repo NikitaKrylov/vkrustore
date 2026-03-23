@@ -1,5 +1,10 @@
 package com.example.vkrustore.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -42,7 +47,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.vkrustore.core.navigation.BaseRoute
+import com.example.vkrustore.core.navigation.navigateNewTask
 import com.example.vkrustore.feature.categories.api.CategoriesRoute
 import com.example.vkrustore.feature.search.api.SearchRoute
 import com.example.vkrustore.feature.showcase.api.ShowcaseRoute
@@ -60,49 +71,66 @@ data class NavTabItem(
 @Composable
 fun AppNavigationBar(
     tabs: List<NavTabItem>,
-    selectedRoute: BaseRoute?,
-    onItemClick: (BaseRoute) -> Unit,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     val outlineColor = MaterialTheme.colorScheme.outlineVariant
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+    val selectedRoute = remember(currentDestination) {
+        tabs
+            .firstOrNull { tab ->
+                currentDestination?.hierarchy?.any { it.hasRoute(tab.route::class) } == true
+            }?.route
+    }
+    val isNavigationBarVisible = remember(selectedRoute) {
+        selectedRoute != null
+    }
 
-    NavigationBar(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .navigationBarsPadding()
-            .height(68.dp)
-            .drawBehind {
-                drawLine(
-                    color = outlineColor,
-                    start = Offset(0f, 0f),
-                    end = Offset(size.width, 0f),
-                    strokeWidth = 1.dp.toPx()
-                )
-            },
-        containerColor = Color.Transparent,
-        windowInsets = WindowInsets(0)
+    AnimatedVisibility(
+        visible = isNavigationBarVisible,
+        label = "Navigation bar visibility",
+        enter = fadeIn() + slideInVertically { it },
+        exit = fadeOut() + slideOutVertically { it },
     ) {
-        tabs.forEach { tab ->
-            val isSelected = selectedRoute == tab.route
-
-            CompactNavItem(
-                selected = isSelected,
-                onClick = { if (!isSelected) onItemClick(tab.route) },
-                icon = {
-                    Icon(
-                        painter = painterResource(id = tab.iconRes),
-                        contentDescription = null,
-                        modifier = Modifier.size(26.dp)
+        NavigationBar(
+            modifier = modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .navigationBarsPadding()
+                .height(68.dp)
+                .drawBehind {
+                    drawLine(
+                        color = outlineColor,
+                        start = Offset(0f, 0f),
+                        end = Offset(size.width, 0f),
+                        strokeWidth = 1.dp.toPx()
                     )
                 },
-                label = {
-                    Text(
-                        text = tab.title,
-                        fontSize = 8.sp,
-                        style = TextStyles.LabelSmall
-                    )
-                }
-            )
+            containerColor = Color.Transparent,
+            windowInsets = WindowInsets(0)
+        ) {
+            tabs.forEach { tab ->
+                val isSelected = selectedRoute == tab.route
+
+                CompactNavItem(
+                    selected = isSelected,
+                    onClick = { if (!isSelected) navController.navigateNewTask(tab.route, tab.route) },
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = tab.iconRes),
+                            contentDescription = null,
+                            modifier = Modifier.size(26.dp)
+                        )
+                    },
+                    label = {
+                        Text(
+                            text = tab.title,
+                            fontSize = 8.sp,
+                            style = TextStyles.LabelSmall
+                        )
+                    }
+                )
+            }
         }
     }
 }
@@ -167,7 +195,7 @@ private fun RowScope.CompactNavItem(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewAppNavigationBar() {
+private fun PreviewAppNavigationBar() {
     val navTabs = listOf(
         NavTabItem(
             title = "Приложения",
@@ -189,8 +217,7 @@ fun PreviewAppNavigationBar() {
     VKRuStoreTheme() {
         AppNavigationBar(
             tabs = navTabs,
-            selectedRoute = ShowcaseRoute,
-            onItemClick = {},
+            navController = rememberNavController()
         )
     }
 }
