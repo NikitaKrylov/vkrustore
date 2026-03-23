@@ -4,46 +4,30 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.vkrustore.core.navigation.navigateNewTask
 import com.example.vkrustore.core.storage.KeyValueStorage
 import com.example.vkrustore.core.storage.StorageKeys
 import com.example.vkrustore.core.storage.get
-import com.example.vkrustore.feature.account.api.AccountRoute
-import com.example.vkrustore.feature.account.impl.AccountScreen
-import com.example.vkrustore.feature.appDetail.api.AppDetailRoute
-import com.example.vkrustore.feature.appDetail.impl.AppDetailScreen
-import com.example.vkrustore.feature.categories.api.CategoriesRoute
-import com.example.vkrustore.feature.categories.impl.CategoriesScreen
-import com.example.vkrustore.feature.onboarding.api.OnboardingRoute
-import com.example.vkrustore.feature.onboarding.impl.OnboardingScreen
-import com.example.vkrustore.feature.search.api.SearchRoute
-import com.example.vkrustore.feature.search.impl.SearchScreen
-import com.example.vkrustore.feature.showcase.api.ShowcaseRoute
-import com.example.vkrustore.feature.showcase.impl.ShowcaseScreen
 import com.example.vkrustore.ui.components.AppNavigationBar
 import com.example.vkrustore.ui.components.NavTabItem
+import com.example.vkrustore.ui.navigation.CategoriesGraph
+import com.example.vkrustore.ui.navigation.OnboardingGraph
+import com.example.vkrustore.ui.navigation.SearchGraph
+import com.example.vkrustore.ui.navigation.ShowcaseGraph
+import com.example.vkrustore.ui.navigation.addCategoriesGraph
+import com.example.vkrustore.ui.navigation.addOnboardingGraph
+import com.example.vkrustore.ui.navigation.addSearchGraph
+import com.example.vkrustore.ui.navigation.addShowcaseGraph
 import com.example.vkrustore.uikit.theme.VKRuStoreTheme
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import com.example.vkrustore.uikit.R as UiKit
 
@@ -59,35 +43,20 @@ class MainActivity : ComponentActivity() {
                 NavTabItem(
                     title = "Приложения",
                     iconRes = UiKit.drawable.round_android_24,
-                    route = ShowcaseRoute,
+                    route = ShowcaseGraph,
                 ),
                 NavTabItem(
                     title = "Поиск",
                     iconRes = UiKit.drawable.baseline_search_24,
-                    route = SearchRoute,
+                    route = SearchGraph,
                 ),
                 NavTabItem(
                     title = "Категории",
                     iconRes = UiKit.drawable.baseline_star_24,
-                    route = CategoriesRoute,
+                    route = CategoriesGraph,
                 )
             )
-
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentDestination = navBackStackEntry?.destination
-            val selectedRoute = remember(currentDestination) {
-                navTabs
-                    .map(NavTabItem::route)
-                    .firstOrNull { route ->
-                        currentDestination?.hasRoute(route::class) == true
-                    }
-            }
-            val isNavigationBarVisible = remember(selectedRoute) {
-                selectedRoute in navTabs.map(NavTabItem::route)
-            }
-
             val snackbarHostState = remember { SnackbarHostState() }
-            val scope = rememberCoroutineScope()
 
             VKRuStoreTheme {
                 Scaffold(
@@ -98,69 +67,21 @@ class MainActivity : ComponentActivity() {
                         SnackbarHost(snackbarHostState)
                     },
                     bottomBar = {
-                        AnimatedVisibility(
-                            visible = isNavigationBarVisible,
-                            label = "Navigation bar visibility",
-                            enter = fadeIn() + slideInVertically { it },
-                            exit = fadeOut() + slideOutVertically { it },
-                        ) {
-                            AppNavigationBar(
-                                tabs = navTabs,
-                                selectedRoute = selectedRoute,
-                                onItemClick = { route ->
-                                    navController.navigateNewTask(route, route)
-                                },
-                            )
-                        }
+                        AppNavigationBar(navTabs, navController)
                     }
                 ) { innerPadding ->
                     val isOnboarding = storage.get<Boolean>(StorageKeys.IsOnboarded) ?: true
 
                     NavHost(
                         navController = navController,
-                        startDestination = OnboardingRoute.takeIf { isOnboarding } ?: ShowcaseRoute,
+                        startDestination = OnboardingGraph.takeIf { isOnboarding } ?: ShowcaseGraph,
                         modifier = Modifier.padding(innerPadding)
                     ) {
-                        composable<OnboardingRoute> {
-                            OnboardingScreen(
-                                onFinishOnboarding = {
-                                    navController.navigateNewTask(ShowcaseRoute, OnboardingRoute)
-                                }
-                            )
-                        }
-
-                        composable<ShowcaseRoute> {
-                            ShowcaseScreen(
-                                navigateToDetail = { appId ->
-                                    navController.navigate(AppDetailRoute(appId))
-                                }
-                            )
-                        }
-
-                        composable<CategoriesRoute> {
-                            CategoriesScreen()
-                        }
-
-                        composable<SearchRoute> {
-                            SearchScreen()
-                        }
-
-                        composable<AccountRoute> {
-                            AccountScreen()
-                        }
-
-                        composable<AppDetailRoute> {
-                            AppDetailScreen(
-                                onBack = navController::popBackStack,
-                                showMessage = { message ->
-                                    scope.launch {
-                                        snackbarHostState.showSnackbar(message)
-                                    }
-                                }
-                            )
-                        }
+                        addOnboardingGraph(navController)
+                        addShowcaseGraph(navController)
+                        addSearchGraph(navController)
+                        addCategoriesGraph(navController)
                     }
-
                 }
             }
         }

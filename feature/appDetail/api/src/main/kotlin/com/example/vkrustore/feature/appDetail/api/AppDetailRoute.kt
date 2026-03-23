@@ -1,9 +1,10 @@
 package com.example.vkrustore.feature.appDetail.api
 
+import com.example.vkrustore.core.navigation.BaseRoute
 import kotlinx.serialization.Serializable
 
 
 @Serializable
 data class AppDetailRoute(
     val appId: String,
-)
+) : BaseRoute
